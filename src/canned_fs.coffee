@@ -1,7 +1,7 @@
 async = require 'async'
 path = require 'path'
 fs = require 'fs'
-{each, extend, map} = require 'underscore'
+{each, map} = require 'underscore'
 
 recursivelyFindFiles = (root, resultPrefix, done) ->
   fs.readdir root, (err, filenames) ->
