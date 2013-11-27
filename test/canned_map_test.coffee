@@ -1,5 +1,5 @@
 assert = require 'assert'
-canned = require '../lib/canned.js'
+cannedMap = require '../lib/canned_map.js'
 
 describe 'canned response map', ->
 
@@ -8,7 +8,7 @@ describe 'canned response map', ->
     '/v2/foo/baz.json': 'answer2'
 
   get = (path) ->
-    (canned data)
+    (cannedMap data)
       method: "GET"
       path: path
 
