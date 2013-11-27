@@ -22,7 +22,7 @@ parseFilename = (filename) ->
 
   {path,query}
 
-parseFilenames = (fsHash) ->
+buildResponseMap = (fsHash) ->
   responseMap = {}
   each fsHash, (content, filename) ->
     fsPath = parseFilename filename
@@ -45,7 +45,7 @@ entryScore = (request, responseMapEntry) ->
   score
 
 module.exports = (fsHash) ->
-  responseMap = parseFilenames fsHash
+  responseMap = buildResponseMap fsHash
 
   (request) ->
     entries = responseMap[stripExtension request.path]
