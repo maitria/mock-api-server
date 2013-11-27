@@ -3,10 +3,7 @@
 stripExtension = (path) ->
   path.replace /\.json$/, ''
 
-parseFilename = (filename) ->
-  [dirname] = filename.match /^.*\//
-  [basename] = filename.match /[^,/]*$/
-  path = dirname + stripExtension basename
+extractQueryFromFilename = (filename) ->
   meta = (last filename.split '/').split(',')
   meta.splice(-1, 1)
 
@@ -14,6 +11,14 @@ parseFilename = (filename) ->
   each meta, (part) ->
     [name, value] = part.split '='
     query[name] = value
+  query
+
+parseFilename = (filename) ->
+  [dirname] = filename.match /^.*\//
+  [basename] = filename.match /[^,/]*$/
+
+  path = dirname + stripExtension basename
+  query = extractQueryFromFilename filename
 
   {path,query}
 
