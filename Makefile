@@ -1,20 +1,17 @@
 
-COFFEE=node_modules/.bin/coffee --js
+src_FILES	= $(shell find src -type f -name '*.coffee')
+lib_FILES	= $(src_FILES:src/%.coffee=lib/%.js)
 
-SRCDIR = src
-SRC = $(shell find $(SRCDIR) -type f -name '*.coffee')
-LIBDIR = lib
-LIB = $(SRC:$(SRCDIR)/%.coffee=$(LIBDIR)/%.js)
+build: $(lib_FILES)
 
-$(LIBDIR)/%.js: $(SRCDIR)/%.coffee
+lib/%.js: src/%.coffee
 	@mkdir -p "$(@D)"
-	$(COFFEE) <"$<" >"$@"
-
-build: $(LIB)
+	./node_modules/.bin/coffee --js <"$<" >"$@"
 
 setup:
 	npm --registry http://registry.npmjs.org install
 
-all: setup clean
+test:
+	./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register
 
-.PHONY: setup build all
+.PHONY: setup test build
