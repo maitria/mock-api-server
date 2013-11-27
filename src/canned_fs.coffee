@@ -38,11 +38,11 @@ module.exports = (path, done) ->
   recursivelyFindFiles path, '/', (err, files) ->
     return done err if err?
 
-    hash = {}
+    actions = {}
     each files, (file) ->
-      hash[file.resultPath] = (done) ->
+      actions[file.resultPath] = (done) ->
         fs.readFile file.path, (err, contents) ->
           return done err if err?
           done null, JSON.parse contents
 
-    async.parallel hash, done
+    async.parallel actions, done
