@@ -4,6 +4,7 @@
   "homepage": "https://github.com/maitria/mock-api-server",
   "license": "MIT",
   "version": "0.0.1",
+  "main": "lib/index.js",
   "dependencies": {
     "async": "~0.2.9",
     "coffee-script-redux": "2.0.0-beta7",
