@@ -26,7 +26,7 @@ recursivelyFindFiles = (root, resultPrefix, done) ->
           subActions.push (done) ->
             recursivelyFindFiles file.path, file.resultPath, done
         else
-          results.push file.resultPath
+          results.push file
 
       async.series subActions, (err, listOfSubResults) ->
         return done err if err?
@@ -40,6 +40,9 @@ module.exports = (path, done) ->
 
     hash = {}
     each files, (file) ->
-      hash[file] = 42
+      hash[file.resultPath] = (done) ->
+        fs.readFile file.path, (err, contents) ->
+          return done err if err?
+          done null, JSON.parse contents
 
-    done null, hash
+    async.parallel hash, done
