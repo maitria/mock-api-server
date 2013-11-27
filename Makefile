@@ -11,7 +11,7 @@ lib/%.js: src/%.coffee
 setup:
 	npm --registry http://registry.npmjs.org install
 
-test:
+test: build
 	./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register
 
 .PHONY: setup test build
