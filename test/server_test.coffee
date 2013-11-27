@@ -16,7 +16,7 @@ describe 'a mock API server', ->
         done()
       request.end()
 
-  xit 'serves static API responses', (done) ->
+  it 'serves static API responses', (done) ->
     mockApiServer port: 7001, (err, server) ->
       requestOptions =
         port: 7001
