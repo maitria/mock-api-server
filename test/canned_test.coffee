@@ -20,3 +20,6 @@ describe 'canned response map', ->
 
   it 'answers undefined when no request is found', ->
     assert.strictEqual undefined, get '/v2/foo/quux.json'
+
+  it 'finds a request without an extension', ->
+    assert.equal 'answer1', get '/v2/foo/bar'

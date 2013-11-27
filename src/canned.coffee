@@ -1,4 +1,16 @@
+{each} = require 'underscore'
 
-module.exports = (data) ->
+stripExtension = (path) ->
+  path.replace /\.json$/, ''
+
+stripFsExtensions = (fsHash) ->
+  data = {}
+  each fsHash, (value, key) ->
+    data[stripExtension key] = value
+  data
+
+module.exports = (fsHash) ->
+  data = stripFsExtensions fsHash
+
   (request) ->
-    data[request.path]
+    data[stripExtension request.path]
