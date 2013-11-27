@@ -2,4 +2,4 @@
 
 module.exports = (data) ->
   (request) ->
-    'answer1'
+    data[request.path]
