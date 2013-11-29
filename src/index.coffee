@@ -1,5 +1,5 @@
 express = require 'express'
-cannedFs = require './canned_fs'
+loadJsonFiles = require './load_json_files'
 staticResponseMap = require './static_response_map'
 {pick} = require 'underscore'
 
@@ -9,7 +9,7 @@ class MockApiServer
   start: (done) ->
     @app = express()
     @app.use @_cannedResponses
-    cannedFs 'test/mock-api', (err, hash) =>
+    loadJsonFiles 'test/mock-api', (err, hash) =>
       @staticResponseMap = staticResponseMap hash
       @server = @app.listen @options.port, done
 

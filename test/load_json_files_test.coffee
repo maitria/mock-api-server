@@ -1,5 +1,5 @@
 assert = require 'assert'
-cannedFs = require '../lib/canned_fs.js'
+cannedFs = require '../lib/load_json_files.js'
 
 describe 'canned filesystem reader', ->
 
