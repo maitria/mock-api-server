@@ -13,23 +13,21 @@ extractQueryFromFilename = (filename) ->
     query[name] = value
   query
 
-parseFilename = (filename) ->
+buildStaticResponseEntry = (filename, content) ->
   [dirname] = filename.match /^.*\//
   [basename] = filename.match /[^,/]*$/
 
   path = dirname + stripExtension basename
   query = extractQueryFromFilename filename
 
-  {path,query}
+  {path,query,content}
 
 buildResponseMap = (fsHash) ->
   responseMap = {}
   each fsHash, (content, filename) ->
-    fsPath = parseFilename filename
-    responseMap[fsPath.path] ?= []
-    responseMap[fsPath.path].push
-      query: fsPath.query
-      content: content
+    entry = buildStaticResponseEntry filename, content
+    responseMap[entry.path] ?= []
+    responseMap[entry.path].push entry
 
   each responseMap, (entries, path) ->
     responseMap[path] = sortBy entries, (entry) ->
