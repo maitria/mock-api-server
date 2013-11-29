@@ -1,6 +1,6 @@
 express = require 'express'
 cannedFs = require './canned_fs'
-cannedMap = require './canned_map'
+staticResponseMap = require './static_response_map'
 {pick} = require 'underscore'
 
 class MockApiServer
@@ -10,14 +10,14 @@ class MockApiServer
     @app = express()
     @app.use @_cannedResponses
     cannedFs 'test/mock-api', (err, hash) =>
-      @cannedMap = cannedMap hash
+      @staticResponseMap = staticResponseMap hash
       @server = @app.listen @options.port, done
 
   stop: ->
     @server.close()
 
   _cannedResponses: (req, res, next) =>
-    response = @cannedMap(pick req, 'method', 'path', 'query')
+    response = @staticResponseMap(pick req, 'method', 'path', 'query')
     return next() if response == undefined
     res.send JSON.stringify response
 
