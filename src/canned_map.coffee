@@ -1,4 +1,4 @@
-{each, filter, last, sortBy} = require 'underscore'
+{each, filter, last, size, sortBy} = require 'underscore'
 
 stripExtension = (path) ->
   path.replace /\.json$/, ''
@@ -30,6 +30,11 @@ buildResponseMap = (fsHash) ->
     responseMap[fsPath.path].push
       query: fsPath.query
       content: content
+
+  each responseMap, (entries, path) ->
+    responseMap[path] = sortBy entries, (entry) ->
+      1e9 - size entry.query
+
   responseMap
 
 entryAllowedForRequest = (request, responseMapEntry) ->
@@ -37,12 +42,6 @@ entryAllowedForRequest = (request, responseMapEntry) ->
   each responseMapEntry.query, (value, name) ->
     matches = false unless request.query[name] == value
   matches
-
-entryScore = (request, responseMapEntry) ->
-  score = 0
-  each responseMapEntry.query, (value, name) ->
-    score += 1 if request.query[name] == value
-  score
 
 module.exports = (fsHash) ->
   responseMap = buildResponseMap fsHash
@@ -55,5 +54,4 @@ module.exports = (fsHash) ->
       entryAllowedForRequest request, entry
     return undefined if allowedEntries.length == 0
 
-    prioritizedEntries = sortBy allowedEntries, entryScore
-    (last prioritizedEntries).content
+    allowedEntries[0].content

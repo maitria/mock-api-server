@@ -1,6 +1,7 @@
 express = require 'express'
 cannedFs = require './canned_fs'
 cannedMap = require './canned_map'
+{pick} = require 'underscore'
 
 class MockApiServer
   constructor: (@options) ->
@@ -16,7 +17,7 @@ class MockApiServer
     @server.close()
 
   _cannedResponses: (req, res, next) =>
-    response = @cannedMap method: req.method, path: req.path
+    response = @cannedMap(pick req, 'method', 'path', 'query')
     return next() if response == undefined
     res.send JSON.stringify response
 
