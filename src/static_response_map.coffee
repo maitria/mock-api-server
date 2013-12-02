@@ -35,10 +35,13 @@ buildResponseMap = (fsHash) ->
 
   responseMap
 
+matchesPattern = (pattern, value) ->
+  pattern == value
+
 entryAllowedForRequest = (request, responseMapEntry) ->
   matches = true
   each responseMapEntry.query, (value, name) ->
-    matches = false unless request.query[name] == value
+    matches = false unless matchesPattern request.query[name], value
   matches
 
 module.exports = (fsHash) ->
