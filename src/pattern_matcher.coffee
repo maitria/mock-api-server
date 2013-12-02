@@ -1,14 +1,10 @@
 {each, keys} = require 'underscore'
 
-module.exports =
-patternMatcher = (pattern) ->
-  return false unless pattern
+FAIL = 0
+START = 1
 
-  # Compile a simple NFA matcher
+compileNFA = (pattern) ->
   states = []
-
-  FAIL = 0
-  START = 1
 
   states[FAIL] = '%': FAIL
 
@@ -26,6 +22,14 @@ patternMatcher = (pattern) ->
 
   states[currentState] ?= '%': FAIL
   SUCCESS = currentState
+
+  {states,SUCCESS}
+
+module.exports =
+patternMatcher = (pattern) ->
+  return false unless pattern
+
+  {states, SUCCESS} = compileNFA pattern
 
   (value) ->
     currentStates = {}
