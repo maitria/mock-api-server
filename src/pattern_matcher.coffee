@@ -1,7 +1,7 @@
 {each, keys} = require 'underscore'
 
 module.exports =
-mtachesPattern = (pattern, value) ->
+patternMatcher = (pattern) ->
   return false unless pattern
 
   # Compile a simple NFA matcher
@@ -27,17 +27,16 @@ mtachesPattern = (pattern, value) ->
   states[currentState] ?= '%': FAIL
   SUCCESS = currentState
 
-  # Run it
-  currentStates = {}
-  currentStates[START] = true
+  (value) ->
+    currentStates = {}
+    currentStates[START] = true
 
-  each value, (char) ->
-    nextStates = {}
-    each (keys currentStates), (state) ->
-      nextStates[states[state]['%']] = true
-      if states[state][char]?
-        nextStates[states[state][char]] = true
-    currentStates = nextStates
+    each value, (char) ->
+      nextStates = {}
+      each (keys currentStates), (state) ->
+        nextStates[states[state]['%']] = true
+        if states[state][char]?
+          nextStates[states[state][char]] = true
+      currentStates = nextStates
 
-  currentStates[SUCCESS]?
-
+    currentStates[SUCCESS]?

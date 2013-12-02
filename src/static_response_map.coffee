@@ -1,5 +1,5 @@
 {each, filter, keys, last, size, sortBy} = require 'underscore'
-matchesPattern = require './matches_pattern'
+patternMatcher = require './pattern_matcher'
 
 stripExtension = (path) ->
   path.replace /\.json$/, ''
@@ -39,7 +39,7 @@ buildResponseMap = (fsHash) ->
 entryAllowedForRequest = (request, responseMapEntry) ->
   matches = true
   each responseMapEntry.query, (value, name) ->
-    if !matchesPattern value, request.query[name]
+    if !patternMatcher(value) request.query[name]
       matches = false
   matches
 
