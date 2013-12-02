@@ -7,6 +7,7 @@ describe 'canned response map', ->
     '/v2/foo/bar.json': 'answer1'
     '/v2/foo/p=76,bar.json': 'answer3'
     '/v2/foo/baz.json': 'answer2'
+    '/v2/foo/x=hello%world%,baz.json': 'answer4'
 
   get = (path, query) ->
     (cannedMap data)
@@ -26,6 +27,12 @@ describe 'canned response map', ->
   it 'finds a request without an extension', ->
     assert.equal 'answer1', get '/v2/foo/bar'
 
-  it 'can use query parameters to find a more specific response', ->
+  it 'uses query parameters to find a more specific response', ->
     assert.equal 'answer3', get '/v2/foo/bar', p: '76'
     assert.equal 'answer1', get '/v2/foo/bar', p: '77'
+
+  xit 'uses % in a query parameter value as a wildcard', ->
+    assert.equal 'answer4', get '/v2/foo/bar', x: 'hello, world!!'
+    assert.equal 'answer4', get '/v2/foo/bar', x: 'helloworld'
+    assert.equal 'answer4', get '/v2/foo/bar', x: 'hello%world'
+    assert.equal 'answer2', get '/v2/foo/bar', x: 'helloorld'
