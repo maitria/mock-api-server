@@ -7,3 +7,6 @@ describe 'pattern matcher', ->
     matcher = patternMatcher 'hello, world'
     assert matcher 'hello, world'
 
+  it 'says different strings without wildcards do not match', ->
+    matcher = patternMatcher 'hello, world'
+    assert !matcher 'goodbye, world'
