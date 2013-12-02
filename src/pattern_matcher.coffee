@@ -21,15 +21,15 @@ compileNFA = (pattern) ->
       sawWildcard = false
 
   states[currentState] ?= '%': FAIL
-  SUCCESS = currentState
+  successState = currentState
 
-  {states,SUCCESS}
+  {states,successState}
 
 module.exports =
 patternMatcher = (pattern) ->
   return false unless pattern
 
-  {states, SUCCESS} = compileNFA pattern
+  {states, successState} = compileNFA pattern
 
   (value) ->
     currentStates = {}
@@ -43,4 +43,4 @@ patternMatcher = (pattern) ->
           nextStates[states[state][char]] = true
       currentStates = nextStates
 
-    currentStates[SUCCESS]?
+    currentStates[successState]?
