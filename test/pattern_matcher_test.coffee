@@ -18,3 +18,7 @@ describe 'pattern matcher', ->
   it 'handles wildcards at the beginning of the pattern', ->
     matcher = patternMatcher '%world'
     assert matcher 'hello, -- world'
+
+  it 'handles wildcards at the end of the pattern', ->
+    matcher = patternMatcher 'hello%'
+    assert matcher 'hello, -- world'
