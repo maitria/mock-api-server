@@ -33,7 +33,7 @@ example, to serve an endpoint `/v2/foobizzle`, populate the file
 
 ### Responding to Query Parameters
 
-You can make a response which only applies
+If you have these two files:
 
     test/mock-api/v2/foobizzle.json
     test/mock-api/v2/type=search,foobizzle.json
@@ -42,8 +42,8 @@ then `mock-api-server` will serve the second one when `type=search` is provided
 as a query parameter.  Multiple query parameters can be encoded in the filename.
 `mock-api-server` will take the most specific matching file.
 
-`%` can be used as a wildcard for query parameters.  It will match zero or more
-characters.  For example, the following file:
+`%` can be used as a wildcard for query parameter values.  It will match zero
+or more characters.  For example, the following file:
 
     test/mock-api/v2/type=%search%,foobizzle.json
 
