@@ -19,6 +19,7 @@ class MockApiServer
   _cannedResponses: (req, res, next) =>
     response = @staticResponseMap(pick req, 'method', 'path', 'query')
     return next() if response == undefined
+    res.header 'Content-Type', 'application/json'
     res.send JSON.stringify response
 
 module.exports = (options, cb) ->
