@@ -18,7 +18,7 @@ mockApiServer({"port": 7000}, function(err, server) {
 });
 ```
 
-See `test/server\_test.coffee` for more detailed examples.
+See `test/server_test.coffee` for more detailed examples.
 
 If you are using Mocha, you can also boot the server in a `before` clause.
 It's also possible to boot the server once at the beginning of the test
@@ -47,5 +47,5 @@ or more characters.  For example, the following file:
 
     test/mock-api/v2/type=%search%,foobizzle.json
 
-Will match requests with a query parameter `type` containing a value "<search>"
+Will match requests with a query parameter `type` containing a value "search"
 or "index,search" or "search,index".
