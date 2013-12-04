@@ -1,7 +1,7 @@
 assert = require 'assert'
 cannedMap = require '../src/static_response_map'
 
-describe 'canned response map', ->
+describe 'static response map', ->
 
   data =
     '/v2/foo/bar.json': 'answer1'
