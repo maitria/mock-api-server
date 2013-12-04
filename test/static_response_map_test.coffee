@@ -31,6 +31,6 @@ describe 'canned response map', ->
     assert.equal 'answer3', get '/v2/foo/bar', p: '76'
     assert.equal 'answer1', get '/v2/foo/bar', p: '77'
 
-  it 'uses % in a query parameter value as a wildcard', ->
+  it 'handles wildcards in the query value', ->
     assert.equal 'answer4', get '/v2/foo/baz', x: 'hello, world!!'
     assert.equal 'answer2', get '/v2/foo/baz', x: 'helloorld'
