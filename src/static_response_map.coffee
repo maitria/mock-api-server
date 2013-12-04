@@ -1,16 +1,13 @@
 patternMatcher = require './pattern_matcher'
-{each, filter, keys, last, size, sortBy} = require 'underscore'
+{each, filter, size, sortBy} = require 'underscore'
 url = require 'url'
 
 stripExtension = (path) ->
   path.replace /\.json$/, ''
 
 buildStaticResponseEntry = (filename, content) ->
-  aUrl = url.parse filename, true
-
-  path = stripExtension aUrl.pathname
-  query = aUrl.query
-
+  {pathname, query} = url.parse filename, true
+  path = stripExtension pathname
   {path,query,content}
 
 buildResponseMap = (fsHash) ->
