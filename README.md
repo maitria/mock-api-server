@@ -33,7 +33,7 @@ example, to serve an endpoint `/v2/foobizzle`, populate the file
 
 ### Responding to Query Parameters
 
-If you have these these three files:
+If you have these three files:
 
     test/mock-api/v2/foobizzle.json
     test/mock-api/v2/foobizzle.json?type=search
