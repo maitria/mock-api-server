@@ -1,5 +1,5 @@
 assert = require 'assert'
-cannedMap = require '../lib/static_response_map.js'
+cannedMap = require '../src/static_response_map'
 
 describe 'canned response map', ->
 
