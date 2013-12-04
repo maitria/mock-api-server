@@ -7,7 +7,7 @@ describe 'canned response map', ->
     '/v2/foo/bar.json': 'answer1'
     '/v2/foo/p=76,bar.json': 'answer3'
     '/v2/foo/baz.json': 'answer2'
-    '/v2/foo/x=hello%world%,baz.json': 'answer4'
+    '/v2/foo/x=hello*world*,baz.json': 'answer4'
 
   get = (path, query) ->
     (cannedMap data)
