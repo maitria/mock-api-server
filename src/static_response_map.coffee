@@ -1,26 +1,13 @@
-{each, filter, keys, last, size, sortBy} = require 'underscore'
 patternMatcher = require './pattern_matcher'
+{each, filter, size, sortBy} = require 'underscore'
+url = require 'url'
 
 stripExtension = (path) ->
   path.replace /\.json$/, ''
 
-extractQueryFromFilename = (filename) ->
-  meta = (last filename.split '/').split(',')
-  meta.splice(-1, 1)
-
-  query = {}
-  each meta, (part) ->
-    [name, value] = part.split '='
-    query[name] = value
-  query
-
 buildStaticResponseEntry = (filename, content) ->
-  [dirname] = filename.match /^.*\//
-  [basename] = filename.match /[^,/]*$/
-
-  path = dirname + stripExtension basename
-  query = extractQueryFromFilename filename
-
+  {pathname, query} = url.parse filename, true
+  path = stripExtension pathname
   {path,query,content}
 
 buildResponseMap = (fsHash) ->
