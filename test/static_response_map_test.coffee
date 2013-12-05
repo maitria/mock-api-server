@@ -4,17 +4,22 @@ cannedMap = require '../src/static_response_map'
 describe 'static response map', ->
 
   data =
-    '/v2/foo/bar.json': 'answer1'
-    '/v2/foo/bar.json?p=76': 'answer3'
-    '/v2/foo/bar.json?p=76&j=77': 'answer5'
-    '/v2/foo/baz.json': 'answer2'
-    '/v2/foo/baz.json?x=hello*world*': 'answer4'
+    '/GET/v2/foo/bar.json': 'answer1'
+    '/GET/v2/foo/bar.json?p=76': 'answer3'
+    '/GET/v2/foo/bar.json?p=76&j=77': 'answer5'
+    '/PUT/v2/foo/bar.json': 'answer6'
+    '/GET/v2/foo/baz.json': 'answer2'
+    '/GET/v2/foo/baz.json?x=hello*world*': 'answer4'
 
-  get = (path, query) ->
-    (cannedMap data)
-      method: "GET"
-      query: query || {}
-      path: path
+  doMethod = (method) ->
+    (path, query) ->
+      (cannedMap data)
+        method: method
+        query: query || {}
+        path: path
+
+  get = doMethod 'GET'
+  put = doMethod 'PUT'
 
   it 'finds a simple request in the map', ->
     assert.equal 'answer1', get '/v2/foo/bar.json'
@@ -36,3 +41,6 @@ describe 'static response map', ->
   it 'handles wildcards in the query value', ->
     assert.equal 'answer4', get '/v2/foo/baz', x: 'hello, world!!'
     assert.equal 'answer2', get '/v2/foo/baz', x: 'helloorld'
+
+  it 'handles other methods', ->
+    assert.equal 'answer6', put '/v2/foo/bar'

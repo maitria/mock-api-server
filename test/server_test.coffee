@@ -33,4 +33,3 @@ describe 'a mock API server', ->
           server.stop()
           done()
       request.end()
-

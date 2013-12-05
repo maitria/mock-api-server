@@ -1,0 +1,9 @@
+0.2.0
+-----
+
+* Support methods other than GET
+
+0.1.0
+-----
+
+* Use web query format for static response filenames

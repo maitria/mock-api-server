@@ -5,10 +5,15 @@ url = require 'url'
 stripExtension = (path) ->
   path.replace /\.json$/, ''
 
+extractMethod = (filename) ->
+  method = filename.split('/')[1]
+  path = filename.replace /\/[^\/]*/, ''
+  {method,path}
+
 buildStaticResponseEntry = (filename, content) ->
   {pathname, query} = url.parse filename, true
-  path = stripExtension pathname
-  {path,query,content}
+  {method, path} = extractMethod stripExtension pathname
+  {content,method,path,query}
 
 buildResponseMap = (fsHash) ->
   responseMap = {}
@@ -24,6 +29,7 @@ buildResponseMap = (fsHash) ->
   responseMap
 
 entryAllowedForRequest = (request, responseMapEntry) ->
+  return false unless request.method == responseMapEntry.method
   matches = true
   each responseMapEntry.query, (value, name) ->
     if !patternMatcher(value) request.query[name]
