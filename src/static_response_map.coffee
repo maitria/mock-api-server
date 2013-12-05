@@ -1,4 +1,3 @@
-path = require 'path'
 patternMatcher = require './pattern_matcher'
 {each, filter, size, sortBy} = require 'underscore'
 url = require 'url'
@@ -7,7 +6,7 @@ stripExtension = (path) ->
   path.replace /\.json$/, ''
 
 extractMethod = (filename) ->
-  [_, method] = filename.split path.sep
+  [_, method] = filename.split '/'
   path = filename.replace /\/[^\/]*/, ''
   {method,path}
 
@@ -30,6 +29,7 @@ buildResponseMap = (fsHash) ->
   responseMap
 
 entryAllowedForRequest = (request, responseMapEntry) ->
+  return false unless request.method == responseMapEntry.method
   matches = true
   each responseMapEntry.query, (value, name) ->
     if !patternMatcher(value) request.query[name]
