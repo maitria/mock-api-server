@@ -1,7 +1,7 @@
 assert = require 'assert'
 cannedFs = require '../src/load_json_files'
 
-describe 'canned filesystem reader', ->
+describe 'loading json files', ->
 
   result = undefined
   before (done) ->
@@ -11,8 +11,8 @@ describe 'canned filesystem reader', ->
       done()
 
   it 'has entries for the files we know about', ->
-    assert result['/v2/hello.json']
+    assert result['/GET/v2/hello.json']
 
   it 'has parsed the contents', ->
-    assert.equal "Hello, World!", result['/v2/hello.json'].answer
+    assert.equal "Hello, World!", result['/GET/v2/hello.json'].answer
 

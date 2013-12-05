@@ -4,11 +4,11 @@ cannedMap = require '../src/static_response_map'
 describe 'static response map', ->
 
   data =
-    '/v2/foo/bar.json': 'answer1'
-    '/v2/foo/bar.json?p=76': 'answer3'
-    '/v2/foo/bar.json?p=76&j=77': 'answer5'
-    '/v2/foo/baz.json': 'answer2'
-    '/v2/foo/baz.json?x=hello*world*': 'answer4'
+    '/GET/v2/foo/bar.json': 'answer1'
+    '/GET/v2/foo/bar.json?p=76': 'answer3'
+    '/GET/v2/foo/bar.json?p=76&j=77': 'answer5'
+    '/GET/v2/foo/baz.json': 'answer2'
+    '/GET/v2/foo/baz.json?x=hello*world*': 'answer4'
 
   get = (path, query) ->
     (cannedMap data)
