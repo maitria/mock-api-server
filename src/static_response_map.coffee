@@ -6,7 +6,7 @@ stripExtension = (path) ->
   path.replace /\.json$/, ''
 
 extractMethod = (filename) ->
-  [_, method] = filename.split '/'
+  method = filename.split('/')[1]
   path = filename.replace /\/[^\/]*/, ''
   {method,path}
 
