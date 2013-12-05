@@ -3,7 +3,7 @@
   "description": "Mock out your API server for testing.",
   "homepage": "https://github.com/maitria/mock-api-server",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "dependencies": {
     "async": "~0.2.9",
