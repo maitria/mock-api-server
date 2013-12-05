@@ -33,21 +33,3 @@ describe 'a mock API server', ->
           server.stop()
           done()
       request.end()
-
-  it 'handles methods other than GET', (done) ->
-    mockApiServer port: 7002, (err, server) ->
-      requestOptions =
-        port: 7002
-        hostname: "localhost"
-        method: "POST"
-        path: "/v2/hello"
-      request = http.request requestOptions, (res) ->
-        assert.equal 200, res.statusCode
-        pageContents = ""
-        res.on 'data', (chunk) ->
-          pageContents += chunk
-        res.on 'end', ->
-          assert.equal JSON.parse(pageContents).answer, "Goodbye Cruel World"
-          server.stop()
-          done()
-      request.end()
