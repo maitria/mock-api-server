@@ -7,7 +7,7 @@ lumber = require 'clumber'
 
 class MockApiServer
   constructor: (@options) ->
-    @logger = @initLogger(@options)
+    @logger = @_initLogger()
 
   start: (done) ->
     @logger.info '[STARTING-SERVER]'
@@ -22,13 +22,13 @@ class MockApiServer
     @logger.info '[STOPPING-SERVER]'
     @server.close()
 
-  initLogger: (options) =>
+  _initLogger: () ->
     transports = []
-    transports.push new lumber.transports.Console if options.logToConsole
+    transports.push new lumber.transports.Console if @options.logToConsole
 
-    if options.fileName?
+    if @options.fileName?
       transports.push new lumber.transports.File
-        filename: options.fileName
+        filename: @options.fileName
         level: 'info'
 
     new lumber.Logger(transports: transports)
