@@ -22,7 +22,6 @@ describe 'static response map', ->
   put = doMethod 'PUT'
 
   it 'finds a simple request in the map', ->
-    res = get '/v2/foot/bar.json'
     assert.equal 'answer1', get '/v2/foo/bar.json'
 
   it 'finds a different simple request in the map', ->

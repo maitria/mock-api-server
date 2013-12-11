@@ -24,10 +24,13 @@ class MockApiServer
 
   initLogger:  =>
     transports = []
-    transports.push new lumber.transports.Console
+    transports.push new lumber.transports.Console if @options.logToConsole
+
+    fileName = if @options.fileName? then 'mock-api-server.log' else @options.fileName
+
     transports.push new lumber.transports.File
-      filename: 'full.log'
-      level: 'silly'
+      filename: fileName
+      level: 'info'
     new lumber.Logger(transports: transports)
  
   _cannedResponses: (req, res, next) =>
@@ -38,7 +41,7 @@ class MockApiServer
     return next() if response == undefined
     res.header 'Content-Type', 'application/json'
     res.send JSON.stringify response
-  
+ 
 module.exports = (options, cb) ->
   server = new MockApiServer options
   server.start (err) ->

@@ -5,7 +5,10 @@ mockApiServer = require '../lib/index.js'
 describe 'a mock API server', ->
 
   it 'accepts requests on the specified port', (done) ->
-    mockApiServer port: 7000, (err, server) ->
+    options =
+      port: 7000
+
+    mockApiServer options, (err, server) ->
       requestOptions =
         port: 7000
         hostname: "localhost"
@@ -17,7 +20,10 @@ describe 'a mock API server', ->
       request.end()
 
   it 'serves static API responses', (done) ->
-    mockApiServer port: 7001, (err, server) ->
+    options =
+      port: 7001
+
+    mockApiServer options, (err, server) ->
       requestOptions =
         port: 7001
         hostname: "localhost"

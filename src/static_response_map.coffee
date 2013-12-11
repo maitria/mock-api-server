@@ -47,5 +47,4 @@ module.exports = (fsHash) ->
       entryAllowedForRequest request, entry
     return undefined if allowedEntries.length == 0
 
-
     allowedEntries[0].content
