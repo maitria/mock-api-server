@@ -23,7 +23,6 @@ describe 'static response map', ->
 
   it 'finds a simple request in the map', ->
     res = get '/v2/foot/bar.json'
-    console.log res
     assert.equal 'answer1', get '/v2/foo/bar.json'
 
   it 'finds a different simple request in the map', ->

@@ -7,7 +7,6 @@ lumber = require 'clumber'
 
 class MockApiServer
   constructor: (@options) ->
-    @options = @options
     @logger = @initLogger()
 
   start: (done) ->
