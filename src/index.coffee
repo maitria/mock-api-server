@@ -7,7 +7,7 @@ lumber = require 'clumber'
 
 class MockApiServer
   constructor: (@options) ->
-    @logger = @initLogger()
+    @logger = @initLogger(@options)
 
   start: (done) ->
     @logger.info '[STARTING-SERVER]'
@@ -22,23 +22,22 @@ class MockApiServer
     @logger.info '[STOPPING-SERVER]'
     @server.close()
 
-  initLogger:  =>
+  initLogger: (options) =>
     transports = []
-    transports.push new lumber.transports.Console if @options.logToConsole
+    transports.push new lumber.transports.Console if options.logToConsole
 
-    fileName = if @options.fileName? then 'mock-api-server.log' else @options.fileName
+    if options.fileName?
+      transports.push new lumber.transports.File
+        filename: options.fileName
+        level: 'info'
 
-    transports.push new lumber.transports.File
-      filename: fileName
-      level: 'info'
     new lumber.Logger(transports: transports)
  
   _cannedResponses: (req, res, next) =>
     request = pick req, 'method', 'path', 'query'
     response = @staticResponseMap(request)
-
-    @logger.info '[MOCK-RESPONSE]', response
     return next() if response == undefined
+    @logger.info '[MOCK-RESPONSE]', response
     res.header 'Content-Type', 'application/json'
     res.send JSON.stringify response
  
