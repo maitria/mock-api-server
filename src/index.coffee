@@ -17,7 +17,7 @@ class MockApiServer
     loadJsonFiles 'test/mock-api', (err, hash) =>
       @staticResponseMap = staticResponseMap hash
       @server = @app.listen @options.port, done
-  
+ 
   stop: ->
     @logger.info '[STOPPING-SERVER]'
     @server.close()
