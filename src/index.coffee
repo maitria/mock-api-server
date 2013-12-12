@@ -26,9 +26,9 @@ class MockApiServer
     transports = []
     transports.push new lumber.transports.Console if @options.logToConsole
 
-    if @options.fileName?
+    if @options.logToFile?
       transports.push new lumber.transports.File
-        filename: @options.fileName
+        filename: @options.logToFile
         level: 'info'
 
     new lumber.Logger(transports: transports)
