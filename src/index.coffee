@@ -35,6 +35,7 @@ class MockApiServer
  
   _cannedResponses: (req, res, next) =>
     request = pick req, 'method', 'path', 'query'
+    @logger.info '[MOCK-REQUEST]', request
     response = @staticResponseMap(request)
     return next() if response == undefined
     @logger.info '[MOCK-RESPONSE]', response
