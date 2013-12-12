@@ -18,11 +18,35 @@ mockApiServer({"port": 7000}, function(err, server) {
 });
 ```
 
-See `test/server_test.coffee` for more detailed examples.
+See `test/server_test.coffee` for more detailed examples.<!-- x_ -->
 
 If you are using Mocha, you can also boot the server in a `before` clause.
 It's also possible to boot the server once at the beginning of the test
 suite.
+
+## Options
+
+`mockApiServer()` supports the following options:
+
+<table>
+<tr>
+  <th>Option</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>`port`</td>
+  <td>The IP port on which the mock server listens.  Must be specified.</td>
+</tr>
+<tr>
+  <td>`logToConsole`</td>
+  <td>If `true`, requests will be logged to the console.  Default: `false`.</td>
+</tr>
+<tr>
+  <td>`logToFile`</td>
+  <td>If set to a filename, requests will be logged to the specified file.
+  If `null` or omitted, no file logging is done.</td>
+</tr>
+</table>
 
 ## Canned Responses
 

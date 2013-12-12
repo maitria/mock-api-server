@@ -3,13 +3,14 @@
   "description": "Mock out your API server for testing.",
   "homepage": "https://github.com/maitria/mock-api-server",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "lib/index.js",
   "dependencies": {
     "async": "~0.2.9",
     "coffee-script-redux": "2.0.0-beta7",
     "express": "3.4.2",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "clumber": "~0.3.0"
   },
   "devDependencies": {
     "mocha": "~1.11.0"
