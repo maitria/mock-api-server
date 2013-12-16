@@ -5,6 +5,9 @@
   "license": "MIT",
   "version": "0.2.1",
   "main": "lib/index.js",
+  "bin": {
+    "mock-api-server": "bin/mock-api-server"
+  },
   "dependencies": {
     "async": "~0.2.9",
     "coffee-script-redux": "2.0.0-beta7",
