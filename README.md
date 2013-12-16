@@ -8,6 +8,10 @@ in a Node.js process.
 
 ## Booting
 
+From the command-line:
+
+    ./node_modules/.bin/mock-api-server --port PORT
+
 To boot once for a test:
 
 ```javascript
