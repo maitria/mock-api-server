@@ -38,15 +38,16 @@ recursivelyFindFiles = (root, resultPrefix, done) ->
           results = results.concat subResults
         done null, results
 
+jsonLoadingActions = (files) ->
+  actions = {}
+  each files, (file) ->
+    actions[file.resultPath] = (done) ->
+      fs.readFile file.path, (err, contents) ->
+        return done err if err?
+        done null, JSON.parse contents
+  actions
+
 module.exports = (path, done) ->
   recursivelyFindFiles path, '/', (err, files) ->
     return done err if err?
-
-    actions = {}
-    each files, (file) ->
-      actions[file.resultPath] = (done) ->
-        fs.readFile file.path, (err, contents) ->
-          return done err if err?
-          done null, JSON.parse contents
-
-    async.parallel actions, done
+    async.parallel jsonLoadingActions(files), done
