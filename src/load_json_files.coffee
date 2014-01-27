@@ -1,13 +1,17 @@
 async = require 'async'
 path = require 'path'
 fs = require 'fs'
-{each, map} = require 'underscore'
+{each, filter, map} = require 'underscore'
+
+safeFilenames = (filenames) ->
+  filter filenames, (filename) ->
+    filename != '.DS_Store'
 
 recursivelyFindFiles = (root, resultPrefix, done) ->
   fs.readdir root, (err, filenames) ->
     return done err if err?
 
-    files = map filenames, (filename) ->
+    files = map safeFilenames(filenames), (filename) ->
       path: path.join root, filename
       resultPath: path.join resultPrefix, filename
 
