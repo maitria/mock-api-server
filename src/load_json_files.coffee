@@ -7,6 +7,9 @@ safeFilenames = (filenames) ->
   filter filenames, (filename) ->
     filename != '.DS_Store'
 
+fileStat = (file, done) ->
+  fs.stat file.path, done
+
 recursivelyFindFiles = (root, resultPrefix, done) ->
   fs.readdir root, (err, filenames) ->
     return done err if err?
@@ -14,9 +17,6 @@ recursivelyFindFiles = (root, resultPrefix, done) ->
     files = map safeFilenames(filenames), (filename) ->
       path: path.join root, filename
       resultPath: path.join resultPrefix, filename
-
-    fileStat = (file, done) ->
-      fs.stat file.path, done
 
     async.map files, fileStat, (err, statBuffers) ->
       return done err if err?
