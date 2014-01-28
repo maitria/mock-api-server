@@ -1,7 +1,7 @@
 assert = require 'assert'
-cannedMap = require '../src/static_response_map'
+Responder = require '../src/responder'
 
-describe 'static response map', ->
+describe 'Responder', ->
 
   data =
     '/GET/v2/foo/bar.json': 'answer1'
@@ -13,7 +13,7 @@ describe 'static response map', ->
 
   doMethod = (method) ->
     (path, query) ->
-      (cannedMap data)
+      new Responder(data).respond
         method: method
         query: query || {}
         path: path
