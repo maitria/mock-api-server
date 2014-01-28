@@ -1,9 +1,8 @@
 express = require 'express'
 loadJsonFiles = require './load_json_files'
-staticResponseMap = require './static_response_map'
 lumber = require 'clumber'
-
 {pick} = require 'underscore'
+Responder = require './responder'
 
 class MockApiServer
   constructor: (@options) ->
@@ -15,7 +14,7 @@ class MockApiServer
     @app = express()
     @app.use @_cannedResponses
     loadJsonFiles 'test/mock-api', (err, hash) =>
-      @staticResponseMap = staticResponseMap hash
+      @responder = new Responder hash
       @server = @app.listen @options.port, done
  
   stop: ->
@@ -36,7 +35,7 @@ class MockApiServer
   _cannedResponses: (req, res, next) =>
     request = pick req, 'method', 'path', 'query'
     @logger.info '[MOCK-REQUEST]', request
-    response = @staticResponseMap(request)
+    response = @responder.respond(request)
     return next() if response == undefined
     @logger.info '[MOCK-RESPONSE]', response
     res.header 'Content-Type', 'application/json'
