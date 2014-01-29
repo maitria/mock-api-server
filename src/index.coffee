@@ -2,7 +2,7 @@ express = require 'express'
 loadJsonFiles = require './load_json_files'
 lumber = require 'clumber'
 {pick} = require 'underscore'
-{Responder} = require './responder'
+{Responder, ResponseSpecification} = require './responder'
 
 class MockApiServer
   constructor: (@options) ->
@@ -20,6 +20,18 @@ class MockApiServer
   stop: ->
     @logger.info '[STOPPING-SERVER]'
     @server.close()
+
+  respondTo: (path) ->
+    @dsl_path = path
+    this
+
+  with: (what) ->
+    spec = new ResponseSpecification
+      path: @dsl_path
+      method: 'GET'
+      query: {}
+      content: what
+    @responder = @responder.withResponseSpecification spec
 
   _initLogger: () ->
     transports = []

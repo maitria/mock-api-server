@@ -2,12 +2,14 @@ assert = require 'assert'
 http = require 'http'
 mockApiServer = require '../lib/index.js'
 {readFile, unlink} = require 'fs'
-{extend, findWhere, map, pick} = require 'underscore'
+{extend, findWhere, identity, map, pick} = require 'underscore'
 
-doRequest = (options, testFn) ->
+doRequest = (options, configureServer, testFn) ->
   apiServerOptions = pick options, 'port', 'logToFile'
 
   mockApiServer apiServerOptions, (err, server) ->
+    configureServer server
+
     requestOptions =
       port: options.port
       hostname: 'localhost'
@@ -30,7 +32,7 @@ describe 'a mock API server', ->
     options =
       port: 7001
 
-    doRequest options, (pageContents) ->
+    doRequest options, identity, (pageContents) ->
       assert.equal JSON.parse(pageContents).answer, "Hello, World!"
       done()
 
@@ -40,7 +42,7 @@ describe 'a mock API server', ->
         port: 7002
         logToFile: "./tmp/foo.log"
 
-      doRequest options, ->
+      doRequest options, identity, ->
         readFile './tmp/foo.log', (err, buffer) ->
           throw err if err?
 
@@ -53,3 +55,15 @@ describe 'a mock API server', ->
           requestLogLine = findWhere logLines, message: '[MOCK-REQUEST]'
           assert.equal '/v2/hello', requestLogLine.meta.path
           done()
+
+  it 'allows for modified responses', (done) ->
+    options =
+      port: 7003
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with (content) ->
+        answer: "Modified <" + content.answer + ">"
+
+    doRequest options, configureServer, (pageContents) ->
+      assert.equal JSON.parse(pageContents).answer, "Modified <Hello, World!>"
+      done()
