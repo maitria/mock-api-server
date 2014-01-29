@@ -23,10 +23,10 @@ class ResponseSpecification
 
 class Responder
   constructor: (fsHash) ->
-    @responseList = @_buildResponseMap fsHash
+    @specs = @_buildResponseMap fsHash
 
   respondTo: (request) ->
-    allowedEntries = filter @responseList, (entry) ->
+    allowedEntries = filter @specs, (entry) ->
       entry.matches request
     return undefined if allowedEntries.length == 0
 
@@ -34,8 +34,8 @@ class Responder
 
   withResponseSpecification: (newSpec) ->
     modifiedResponder = new Responder({})
-    modifiedResponder.responseList = @responseList.splice 0
-    modifiedResponder.responseList.push newSpec
+    modifiedResponder.specs = @specs.splice 0
+    modifiedResponder.specs.push newSpec
     modifiedResponder
 
   _extractMethod: (filename) ->
@@ -44,13 +44,13 @@ class Responder
     {method,path}
 
   _buildResponseMap: (fsHash) ->
-    responseList = map fsHash, (content, filename) =>
+    specs = map fsHash, (content, filename) =>
       @_buildStaticResponseEntry filename, content
 
-    responseList = sortBy responseList, (entry) ->
+    specs = sortBy specs, (entry) ->
       1e9 - size entry.query
 
-    responseList
+    specs
 
   _buildStaticResponseEntry: (filename, content) ->
     {pathname, query} = url.parse filename, true
