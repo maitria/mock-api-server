@@ -46,33 +46,37 @@ describe 'Responder', ->
     assert.equal 'answer6', put '/v2/foo/bar'
 
   context 'with a run-time response spec', ->
-    newSpec = originalResponder = responder = undefined
 
-    GET = (path, query) ->
+    responderWith = (path) ->
+      spec = new ResponseSpecification
+        path: path
+        method: 'GET'
+        content: 'stuffed-in-response'
+        query: {}
+      new Responder(data).withResponseSpecification spec
+
+    getRequest = (path, query) ->
       method: 'GET'
       query: query ? {}
       path: path
 
-    before ->
+    it 'allows adding a response at run-time', ->
+      responder = responderWith '/v2/foo/slime.json'
+      response = responder.respondTo getRequest '/v2/foo/slime.json'
+      assert.equal 'stuffed-in-response', response
+
+    it 'does not modified the original responder', ->
+      original = new Responder(data)
       newSpec = new ResponseSpecification
         path: '/v2/foo/slime.json'
         method: 'GET'
         content: 'stuffed-in-response'
         query: {}
-      originalResponder = new Responder data
-      responder = originalResponder.withResponseSpecification newSpec
-
-    it 'allows adding a response at run-time', ->
-      assert.equal 'stuffed-in-response', responder.respondTo GET '/v2/foo/slime.json'
-
-    it 'does not modified the original responder', ->
-      assert.strictEqual undefined, originalResponder.respondTo GET '/v2/foo/slime.json'
+      original.withResponseSpecification newSpec
+      response = original.respondTo getRequest '/v2/foo/slime.json'
+      assert.strictEqual undefined, response
 
     it 'allows overriding pre-existing entries', ->
-      newSpec = new ResponseSpecification
-        path: '/v2/foo/bar.json'
-        method: 'GET'
-        content: 'modified'
-        query: {}
-      responder = responder.withResponseSpecification newSpec
-      assert.equal 'modified', responder.respondTo GET '/v2/foo/bar.json'
+      responder = responderWith '/v2/foo/bar.json'
+      response = responder.respondTo getRequest '/v2/foo/bar.json'
+      assert.equal 'stuffed-in-response', response
