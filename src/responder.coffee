@@ -2,6 +2,9 @@ patternMatcher = require './pattern_matcher'
 {each, filter, size, sortBy} = require 'underscore'
 url = require 'url'
 
+class ResponseSpecification
+  constructor: ({@method, @path, @query, @content}) ->
+
 class Responder
   constructor: (fsHash) ->
     @responseMap = @_buildResponseMap fsHash
@@ -40,7 +43,7 @@ class Responder
   _buildStaticResponseEntry: (filename, content) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod @_stripExtension pathname
-    {content,method,path,query}
+    new ResponseSpecification {content,method,path,query}
 
   _entryAllowedForRequest: (request, responseMapEntry) ->
     return false unless request.method == responseMapEntry.method
