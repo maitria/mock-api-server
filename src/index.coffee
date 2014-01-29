@@ -15,7 +15,7 @@ class MockApiServer
     @app = express()
     @app.use @_cannedResponses
     loadJsonFiles 'test/mock-api', (err, hash) =>
-      @responder = new Responder hash
+      @originalResponder = @responder = new Responder hash
       @server = @app.listen @options.port, done
  
   stop: ->
@@ -24,6 +24,9 @@ class MockApiServer
 
   respondTo: (args...) ->
     new Dsl @_addResponseSpecification, args
+
+  reset: ->
+    @responder = @originalResponder
 
   _addResponseSpecification: (spec) =>
     @responder = @responder.withResponseSpecification spec

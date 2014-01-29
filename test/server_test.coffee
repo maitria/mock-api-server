@@ -67,3 +67,16 @@ describe 'a mock API server', ->
     doRequest options, configureServer, (pageContents) ->
       assert.equal JSON.parse(pageContents).answer, "Modified <Hello, World!>"
       done()
+
+  it 'can reset the state', (done) ->
+    options =
+      port: 7004
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with (content) ->
+        answer: "Modified <" + content.answer + ">"
+      server.reset()
+
+    doRequest options, configureServer, (pageContents) ->
+      assert.equal JSON.parse(pageContents).answer, "Hello, World!"
+      done()

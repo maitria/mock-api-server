@@ -46,12 +46,13 @@ class Responder
     response
 
   withResponseSpecification: (newSpec) ->
-    @_freshCopyWith
+    answer = @_freshCopyWith
       specs: @_specsWith newSpec
       serialNumber: @serialNumber + 1
+    answer
 
   _specsWith: (newSpec) ->
-    specs = @specs.splice 0
+    specs = @specs.slice 0
     specs.push newSpec.with(changeNumber: @serialNumber + 1)
     @_sortSpecs specs
 
