@@ -46,7 +46,7 @@ describe 'Responder', ->
     assert.equal 'answer6', put '/v2/foo/bar'
 
   context 'with a run-time response spec', ->
-    newSpec = responder = undefined
+    newSpec = originalResponder = responder = undefined
 
     before ->
       newSpec = new ResponseSpecification
@@ -54,12 +54,22 @@ describe 'Responder', ->
         method: 'GET'
         content: 'stuffed-in-response'
         query: {}
-      responder = new Responder(data).withResponseSpecification newSpec
+      originalResponder = new Responder data
+      responder = originalResponder.withResponseSpecification newSpec
 
     it 'allows adding a response at run-time', ->
       request =
         method: 'GET'
         query: {}
         path: '/v2/foo/slime.json'
-
       assert.equal 'stuffed-in-response', responder.respondTo request
+
+    it 'does not modified the original responder', ->
+      request =
+        method: 'GET'
+        query: {}
+        path: '/v2/foo/slime.json'
+      assert.strictEqual undefined, originalResponder.respondTo request
+
+
+
