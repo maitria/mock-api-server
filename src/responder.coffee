@@ -1,10 +1,10 @@
-staticResponseMap = require './static_response_map'
+responseMap = require './response_map'
 
 class Responder
   constructor: (fileHash) ->
-    @staticResponseMap = staticResponseMap fileHash
+    @responseMap = responseMap fileHash
 
   respond: (request) ->
-    @staticResponseMap request
+    @responseMap request
 
 module.exports = Responder
