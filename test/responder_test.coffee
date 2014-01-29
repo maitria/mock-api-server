@@ -71,5 +71,16 @@ describe 'Responder', ->
         path: '/v2/foo/slime.json'
       assert.strictEqual undefined, originalResponder.respondTo request
 
+    it 'allows overriding pre-existing entries', ->
+      request =
+        method: 'GET'
+        query: {p: '76'}
+        path: '/v2/foo/bar.json'
 
-
+      newSpec = new ResponseSpecification
+        path: '/v2/foo/bar.json'
+        method: 'GET'
+        content: 'modified'
+        query: {p: '76'}
+      responder = responder.withResponseSpecification newSpec
+      assert.equal 'modified', responder.respondTo request

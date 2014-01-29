@@ -6,8 +6,9 @@ stripExtension = (path) ->
   path.replace /\.json$/, ''
 
 class ResponseSpecification
-  constructor: ({@method, @path, @query, @content}) ->
+  constructor: ({@method, @path, @query, @content, @changeNumber}) ->
     @path = stripExtension @path
+    @changeNumber ?= 0
 
   matches: (request) ->
     return false unless stripExtension(request.path) == @path
@@ -24,6 +25,7 @@ class ResponseSpecification
 class Responder
   constructor: (fsHash) ->
     @specs = @_buildResponseMap fsHash
+    @serialNumber = 0
 
   respondTo: (request) ->
     allowedEntries = filter @specs, (entry) ->
@@ -33,9 +35,16 @@ class Responder
     allowedEntries[0].content
 
   withResponseSpecification: (newSpec) ->
+    newSpec = new ResponseSpecification extend {}, newSpec,
+      changeNumber: @serialNumber + 1
+
     modifiedResponder = new Responder({})
     modifiedResponder.specs = @specs.splice 0
     modifiedResponder.specs.push newSpec
+    modifiedResponder.specs = sortBy modifiedResponder.specs, (spec) ->
+      1e9 - 1000 * (size spec.query) - spec.changeNumber
+
+    modifiedResponder.serialNumber = @serialNumber + 1
     modifiedResponder
 
   _extractMethod: (filename) ->
