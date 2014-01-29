@@ -1,5 +1,5 @@
 patternMatcher = require './pattern_matcher'
-{each, extend, filter, size, sortBy} = require 'underscore'
+{each, extend, filter, map, size, sortBy} = require 'underscore'
 url = require 'url'
 
 stripExtension = (path) ->
@@ -10,7 +10,9 @@ class ResponseSpecification
     @path = stripExtension @path
 
   matches: (request) ->
-    request.method == @method && @_matchesQuery(request.query)
+    return false unless stripExtension(request.path) == @path
+    return false unless request.method == @method
+    @_matchesQuery request.query
 
   _matchesQuery: (query) ->
     matches = true
@@ -21,13 +23,10 @@ class ResponseSpecification
 
 class Responder
   constructor: (fsHash) ->
-    @responseMap = @_buildResponseMap fsHash
+    @responseList = @_buildResponseMap fsHash
 
   respondTo: (request) ->
-    entries = @responseMap[stripExtension request.path]
-    return undefined if entries == undefined
-
-    allowedEntries = filter entries, (entry) ->
+    allowedEntries = filter @responseList, (entry) ->
       entry.matches request
     return undefined if allowedEntries.length == 0
 
@@ -35,12 +34,8 @@ class Responder
 
   withResponseSpecification: (newSpec) ->
     modifiedResponder = new Responder({})
-    modifiedResponder.responseMap = extend {}, @responseMap
-
-    list = (modifiedResponder.responseMap[newSpec.path] ? []).splice 0
-    list.push newSpec
-    modifiedResponder.responseMap[newSpec.path] = list
-
+    modifiedResponder.responseList = @responseList.splice 0
+    modifiedResponder.responseList.push newSpec
     modifiedResponder
 
   _extractMethod: (filename) ->
@@ -49,17 +44,13 @@ class Responder
     {method,path}
 
   _buildResponseMap: (fsHash) ->
-    responseMap = {}
-    each fsHash, (content, filename) =>
-      entry = @_buildStaticResponseEntry filename, content
-      responseMap[entry.path] ?= []
-      responseMap[entry.path].push entry
+    responseList = map fsHash, (content, filename) =>
+      @_buildStaticResponseEntry filename, content
 
-    each responseMap, (entries, path) ->
-      responseMap[path] = sortBy entries, (entry) ->
-        1e9 - size entry.query
+    responseList = sortBy responseList, (entry) ->
+      1e9 - size entry.query
 
-    responseMap
+    responseList
 
   _buildStaticResponseEntry: (filename, content) ->
     {pathname, query} = url.parse filename, true
