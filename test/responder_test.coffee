@@ -13,7 +13,7 @@ describe 'Responder', ->
 
   doMethod = (method) ->
     (path, query) ->
-      new Responder(data).respond
+      new Responder(data).respondTo
         method: method
         query: query || {}
         path: path
