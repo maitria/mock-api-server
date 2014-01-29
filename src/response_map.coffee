@@ -36,11 +36,12 @@ entryAllowedForRequest = (request, responseMapEntry) ->
       matches = false
   matches
 
-module.exports = (fsHash) ->
-  responseMap = buildResponseMap fsHash
+class ResponseMap
+  constructor: (fsHash) ->
+    @responseMap = buildResponseMap fsHash
 
-  (request) ->
-    entries = responseMap[stripExtension request.path]
+  respondTo: (request) ->
+    entries = @responseMap[stripExtension request.path]
     return undefined if entries == undefined
 
     allowedEntries = filter entries, (entry) ->
@@ -48,3 +49,5 @@ module.exports = (fsHash) ->
     return undefined if allowedEntries.length == 0
 
     allowedEntries[0].content
+
+module.exports = ResponseMap
