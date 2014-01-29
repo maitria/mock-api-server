@@ -6,10 +6,12 @@ class ResponseSpecification
   constructor: ({@method, @path, @query, @content}) ->
 
   matches: (request) ->
-    return false unless request.method == @method
+    request.method == @method && @_matchesQuery(request.query)
+
+  _matchesQuery: (query) ->
     matches = true
     each @query, (value, name) =>
-      if !patternMatcher(value) request.query[name]
+      if !patternMatcher(value) query[name]
         matches = false
     matches
 
