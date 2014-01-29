@@ -4,6 +4,17 @@ lumber = require 'clumber'
 {pick} = require 'underscore'
 {Responder, ResponseSpecification} = require './responder'
 
+class Dsl
+  constructor: (@_addResponseSpecification, [@_path]) ->
+
+  with: (what) ->
+    spec = new ResponseSpecification
+      path: @_path
+      method: 'GET'
+      query: {}
+      content: what
+    @_addResponseSpecification spec
+
 class MockApiServer
   constructor: (@options) ->
     @logger = @_initLogger()
@@ -21,16 +32,10 @@ class MockApiServer
     @logger.info '[STOPPING-SERVER]'
     @server.close()
 
-  respondTo: (path) ->
-    @dsl_path = path
-    this
+  respondTo: (args...) ->
+    new Dsl @_addResponseSpecification, args
 
-  with: (what) ->
-    spec = new ResponseSpecification
-      path: @dsl_path
-      method: 'GET'
-      query: {}
-      content: what
+  _addResponseSpecification: (spec) =>
     @responder = @responder.withResponseSpecification spec
 
   _initLogger: () ->
