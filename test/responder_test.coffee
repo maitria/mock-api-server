@@ -80,3 +80,14 @@ describe 'Responder', ->
       responder = responderWith '/v2/foo/bar.json'
       response = responder.respondTo getRequest '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', response
+
+    it 'allows use of a function to modify the response', ->
+      spec = new ResponseSpecification
+        path: '/v2/foo/bar.json'
+        method: 'GET'
+        query: {}
+        content: (content) ->
+          '<<' + content + '>>'
+
+      responder = new Responder(data).withResponseSpecification spec
+      assert.equal '<<answer1>>', responder.respondTo getRequest '/v2/foo/bar.json'

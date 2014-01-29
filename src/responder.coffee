@@ -35,7 +35,18 @@ class Responder
       entry.matches request
     return undefined if allowedEntries.length == 0
 
-    allowedEntries[0].content
+    contentTransform = (content) ->
+      content
+    response = undefined
+
+    each allowedEntries, (entry) ->
+      if typeof entry.content == 'function'
+        oldTransform = contentTransform
+        contentTransform = (content) ->
+          entry.content oldTransform content
+      else if typeof response == 'undefined'
+        response = contentTransform entry.content
+    response
 
   withResponseSpecification: (newSpec) ->
     @_freshCopyWith
