@@ -15,6 +15,9 @@ class ResponseSpecification
     return false unless request.method == @method
     @_matchesQuery request.query
 
+  with: (params) ->
+    new ResponseSpecification(extend {}, this, params)
+
   _matchesQuery: (query) ->
     matches = true
     each @query, (value, name) =>
@@ -35,12 +38,9 @@ class Responder
     allowedEntries[0].content
 
   withResponseSpecification: (newSpec) ->
-    newSpec = new ResponseSpecification extend {}, newSpec,
-      changeNumber: @serialNumber + 1
-
     modifiedResponder = new Responder({})
     modifiedResponder.specs = @specs.splice 0
-    modifiedResponder.specs.push newSpec
+    modifiedResponder.specs.push newSpec.with(changeNumber: @serialNumber + 1)
     modifiedResponder.specs = sortBy modifiedResponder.specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
