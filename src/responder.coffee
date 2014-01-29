@@ -2,9 +2,12 @@ patternMatcher = require './pattern_matcher'
 {each, extend, filter, size, sortBy} = require 'underscore'
 url = require 'url'
 
+stripExtension = (path) ->
+  path.replace /\.json$/, ''
+
 class ResponseSpecification
   constructor: ({@method, @path, @query, @content}) ->
-    @path = @_stripExtension @path
+    @path = stripExtension @path
 
   matches: (request) ->
     request.method == @method && @_matchesQuery(request.query)
@@ -16,15 +19,12 @@ class ResponseSpecification
         matches = false
     matches
 
-  _stripExtension: (path) ->
-    path.replace /\.json$/, ''
-
 class Responder
   constructor: (fsHash) ->
     @responseMap = @_buildResponseMap fsHash
 
   respondTo: (request) ->
-    entries = @responseMap[@_stripExtension request.path]
+    entries = @responseMap[stripExtension request.path]
     return undefined if entries == undefined
 
     allowedEntries = filter entries, (entry) ->
@@ -42,9 +42,6 @@ class Responder
     modifiedResponder.responseMap[newSpec.path] = list
 
     modifiedResponder
-
-  _stripExtension: (path) ->
-    path.replace /\.json$/, ''
 
   _extractMethod: (filename) ->
     method = filename.split('/')[1]
@@ -66,7 +63,7 @@ class Responder
 
   _buildStaticResponseEntry: (filename, content) ->
     {pathname, query} = url.parse filename, true
-    {method, path} = @_extractMethod @_stripExtension pathname
+    {method, path} = @_extractMethod stripExtension pathname
     new ResponseSpecification {content,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}
