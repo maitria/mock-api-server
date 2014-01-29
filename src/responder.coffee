@@ -5,6 +5,14 @@ url = require 'url'
 class ResponseSpecification
   constructor: ({@method, @path, @query, @content}) ->
 
+  matches: (request) ->
+    return false unless request.method == @method
+    matches = true
+    each @query, (value, name) =>
+      if !patternMatcher(value) request.query[name]
+        matches = false
+    matches
+
 class Responder
   constructor: (fsHash) ->
     @responseMap = @_buildResponseMap fsHash
@@ -13,8 +21,8 @@ class Responder
     entries = @responseMap[@_stripExtension request.path]
     return undefined if entries == undefined
 
-    allowedEntries = filter entries, (entry) =>
-      @_entryAllowedForRequest request, entry
+    allowedEntries = filter entries, (entry) ->
+      entry.matches request
     return undefined if allowedEntries.length == 0
 
     allowedEntries[0].content
@@ -44,14 +52,5 @@ class Responder
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod @_stripExtension pathname
     new ResponseSpecification {content,method,path,query}
-
-  _entryAllowedForRequest: (request, responseMapEntry) ->
-    return false unless request.method == responseMapEntry.method
-    matches = true
-    each responseMapEntry.query, (value, name) ->
-      if !patternMatcher(value) request.query[name]
-        matches = false
-    matches
-
 
 module.exports = Responder
