@@ -48,6 +48,11 @@ describe 'Responder', ->
   context 'with a run-time response spec', ->
     newSpec = originalResponder = responder = undefined
 
+    GET = (path, query) ->
+      method: 'GET'
+      query: query ? {}
+      path: path
+
     before ->
       newSpec = new ResponseSpecification
         path: '/v2/foo/slime.json'
@@ -58,29 +63,16 @@ describe 'Responder', ->
       responder = originalResponder.withResponseSpecification newSpec
 
     it 'allows adding a response at run-time', ->
-      request =
-        method: 'GET'
-        query: {}
-        path: '/v2/foo/slime.json'
-      assert.equal 'stuffed-in-response', responder.respondTo request
+      assert.equal 'stuffed-in-response', responder.respondTo GET '/v2/foo/slime.json'
 
     it 'does not modified the original responder', ->
-      request =
-        method: 'GET'
-        query: {}
-        path: '/v2/foo/slime.json'
-      assert.strictEqual undefined, originalResponder.respondTo request
+      assert.strictEqual undefined, originalResponder.respondTo GET '/v2/foo/slime.json'
 
     it 'allows overriding pre-existing entries', ->
-      request =
-        method: 'GET'
-        query: {p: '76'}
-        path: '/v2/foo/bar.json'
-
       newSpec = new ResponseSpecification
         path: '/v2/foo/bar.json'
         method: 'GET'
         content: 'modified'
-        query: {p: '76'}
+        query: {}
       responder = responder.withResponseSpecification newSpec
-      assert.equal 'modified', responder.respondTo request
+      assert.equal 'modified', responder.respondTo GET '/v2/foo/bar.json'
