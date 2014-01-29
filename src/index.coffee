@@ -2,7 +2,7 @@ express = require 'express'
 loadJsonFiles = require './load_json_files'
 lumber = require 'clumber'
 {pick} = require 'underscore'
-Responder = require './responder'
+{Responder} = require './responder'
 
 class MockApiServer
   constructor: (@options) ->

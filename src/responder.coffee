@@ -55,4 +55,4 @@ class Responder
     {method, path} = @_extractMethod @_stripExtension pathname
     new ResponseSpecification {content,method,path,query}
 
-module.exports = Responder
+module.exports = {Responder, ResponseSpecification}

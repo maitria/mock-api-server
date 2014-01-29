@@ -1,5 +1,5 @@
 assert = require 'assert'
-Responder = require '../src/responder'
+{Responder} = require '../src/responder'
 
 describe 'Responder', ->
 
