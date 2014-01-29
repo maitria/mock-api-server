@@ -2,18 +2,8 @@ express = require 'express'
 loadJsonFiles = require './load_json_files'
 lumber = require 'clumber'
 {pick} = require 'underscore'
-{Responder, ResponseSpecification} = require './responder'
-
-class Dsl
-  constructor: (@_addResponseSpecification, [@_path]) ->
-
-  with: (what) ->
-    spec = new ResponseSpecification
-      path: @_path
-      method: 'GET'
-      query: {}
-      content: what
-    @_addResponseSpecification spec
+{Responder} = require './responder'
+Dsl = require './dsl'
 
 class MockApiServer
   constructor: (@options) ->
