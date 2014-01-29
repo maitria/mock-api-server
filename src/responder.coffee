@@ -38,12 +38,17 @@ class Responder
     allowedEntries[0].content
 
   withResponseSpecification: (newSpec) ->
-    modifiedResponder = new Responder({})
-    modifiedResponder.specs = @specs.splice 0
-    modifiedResponder.specs.push newSpec.with(changeNumber: @serialNumber + 1)
-    modifiedResponder.specs = @_sortSpecs modifiedResponder.specs
-    modifiedResponder.serialNumber = @serialNumber + 1
-    modifiedResponder
+    @_freshCopyWith
+      specs: @_specsWith newSpec
+      serialNumber: @serialNumber + 1
+
+  _specsWith: (newSpec) ->
+    specs = @specs.splice 0
+    specs.push newSpec.with(changeNumber: @serialNumber + 1)
+    @_sortSpecs specs
+
+  _freshCopyWith: (parameters) ->
+    extend new Responder({}), parameters
 
   _extractMethod: (filename) ->
     method = filename.split('/')[1]
