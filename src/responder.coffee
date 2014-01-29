@@ -41,9 +41,7 @@ class Responder
     modifiedResponder = new Responder({})
     modifiedResponder.specs = @specs.splice 0
     modifiedResponder.specs.push newSpec.with(changeNumber: @serialNumber + 1)
-    modifiedResponder.specs = sortBy modifiedResponder.specs, (spec) ->
-      1e9 - 1000 * (size spec.query) - spec.changeNumber
-
+    modifiedResponder.specs = @_sortSpecs modifiedResponder.specs
     modifiedResponder.serialNumber = @serialNumber + 1
     modifiedResponder
 
@@ -55,11 +53,11 @@ class Responder
   _buildResponseMap: (fsHash) ->
     specs = map fsHash, (content, filename) =>
       @_buildStaticResponseEntry filename, content
+    @_sortSpecs specs
 
-    specs = sortBy specs, (entry) ->
-      1e9 - size entry.query
-
-    specs
+  _sortSpecs: (specs) ->
+    sortBy specs, (spec) ->
+      1e9 - 1000 * (size spec.query) - spec.changeNumber
 
   _buildStaticResponseEntry: (filename, content) ->
     {pathname, query} = url.parse filename, true
