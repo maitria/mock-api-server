@@ -1,5 +1,5 @@
 assert = require 'assert'
-{Responder} = require '../src/responder'
+{Responder, ResponseSpecification} = require '../src/responder'
 
 describe 'Responder', ->
 
@@ -44,3 +44,12 @@ describe 'Responder', ->
 
   it 'handles other methods', ->
     assert.equal 'answer6', put '/v2/foo/bar'
+
+  it 'allows adding a response at run-time', ->
+    newSpec = new ResponseSpecification
+      path: '/v2/foo/slime.json'
+      method: 'GET'
+      content: 'stuffed-in-response'
+      query: {}
+    responder = new Responder(data).withResponseSpecification newSpec
+    assert.equal 'stuffed-in-response', responder.respondTo {method: 'GET', query: {}, path: '/v2/foo/slime.json'}

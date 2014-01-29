@@ -1,9 +1,10 @@
 patternMatcher = require './pattern_matcher'
-{each, filter, size, sortBy} = require 'underscore'
+{each, extend, filter, size, sortBy} = require 'underscore'
 url = require 'url'
 
 class ResponseSpecification
   constructor: ({@method, @path, @query, @content}) ->
+    @path = @_stripExtension @path
 
   matches: (request) ->
     request.method == @method && @_matchesQuery(request.query)
@@ -14,6 +15,9 @@ class ResponseSpecification
       if !patternMatcher(value) query[name]
         matches = false
     matches
+
+  _stripExtension: (path) ->
+    path.replace /\.json$/, ''
 
 class Responder
   constructor: (fsHash) ->
@@ -28,6 +32,16 @@ class Responder
     return undefined if allowedEntries.length == 0
 
     allowedEntries[0].content
+
+  withResponseSpecification: (newSpec) ->
+    modifiedResponder = new Responder({})
+    modifiedResponder.responseMap = extend {}, @responseMap
+
+    list = (modifiedResponder.responseMap[newSpec.path] ? []).splice 0
+    list.push newSpec
+    modifiedResponder.responseMap[newSpec.path] = list
+
+    modifiedResponder
 
   _stripExtension: (path) ->
     path.replace /\.json$/, ''
