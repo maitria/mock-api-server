@@ -1,5 +1,5 @@
 patternMatcher = require './pattern_matcher'
-{each, extend, filter, map, size, sortBy} = require 'underscore'
+{compose, each, extend, filter, identity, map, size, sortBy} = require 'underscore'
 url = require 'url'
 
 stripExtension = (path) ->
@@ -35,15 +35,12 @@ class Responder
       entry.matches request
     return undefined if allowedEntries.length == 0
 
-    contentTransform = (content) ->
-      content
+    contentTransform = identity
     response = undefined
 
     each allowedEntries, (entry) ->
       if typeof entry.content == 'function'
-        oldTransform = contentTransform
-        contentTransform = (content) ->
-          entry.content oldTransform content
+        contentTransform = compose entry.content, contentTransform
       else if typeof response == 'undefined'
         response = contentTransform entry.content
     response
