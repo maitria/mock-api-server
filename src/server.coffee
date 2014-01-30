@@ -3,7 +3,7 @@ loadJsonFiles = require './load_json_files'
 lumber = require 'clumber'
 mockApiServer = require './index'
 {pick} = require 'underscore'
-{Responder} = require './responder'
+{Responder, ResponseSpecification} = require './responder'
 
 HELP_MESSAGE = \
 "mock-api-server: A stand-in for a real API server
@@ -55,20 +55,31 @@ class Server
     @logger.info '[STARTING-SERVER]'
 
     @app = express()
+    @app.use express.bodyParser()
     @app.use @_cannedResponses
+    @app.get '/mock-api/stop', @_stop
+    @app.get '/mock-api/reset', @_reset
+    @app.post '/mock-api/add-response', @_addResponse
     loadJsonFiles 'test/mock-api', (err, hash) =>
       @originalResponder = @responder = new Responder hash
       @server = @app.listen @options.port, done
  
-  stop: ->
+  _stop: (req, res) =>
     @logger.info '[STOPPING-SERVER]'
-    @server.close()
+    die = =>
+      @server.close()
+      process.exit 0
+    setTimeout die, 50
+    res.send 'OK'
 
-  reset: ->
+  _reset: (req, res) =>
     @responder = @originalResponder
+    res.send 'OK'
 
-  _addResponseSpecification: (spec) =>
+  _addResponse: (req, res) =>
+    spec = new ResponseSpecification(req.body)
     @responder = @responder.withResponseSpecification spec
+    res.send 'OK'
 
   _initLogger: () ->
     transports = []

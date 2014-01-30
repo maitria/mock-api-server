@@ -4,7 +4,7 @@ class Dsl
   constructor: (@_addResponseSpecification, [@_path]) ->
 
   with: (what) ->
-    spec = new ResponseSpecification
+    spec =
       path: @_path
       method: 'GET'
       query: {}

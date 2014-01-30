@@ -61,11 +61,11 @@ describe 'a mock API server', ->
       port: 7003
 
     configureServer = (server) ->
-      server.respondTo('/v2/hello').with (content) ->
-        answer: "Modified <" + content.answer + ">"
+      server.respondTo('/v2/hello').with
+        answer: "Modified Hello, World!"
 
     doRequest options, configureServer, (pageContents) ->
-      assert.equal JSON.parse(pageContents).answer, "Modified <Hello, World!>"
+      assert.equal JSON.parse(pageContents).answer, "Modified Hello, World!"
       done()
 
   it 'can reset the state', (done) ->
@@ -73,8 +73,8 @@ describe 'a mock API server', ->
       port: 7004
 
     configureServer = (server) ->
-      server.respondTo('/v2/hello').with (content) ->
-        answer: "Modified <" + content.answer + ">"
+      server.respondTo('/v2/hello').with
+        answer: "Modified Hello, World!"
       server.reset()
 
     doRequest options, configureServer, (pageContents) ->
