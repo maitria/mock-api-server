@@ -1,3 +1,10 @@
+0.3.0
+-----
+
+* Responses can be inserted at runtime.
+* Mock API server runs in a separate process and the API can connect to an
+  existing API.
+
 0.2.3
 -----
 
