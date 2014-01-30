@@ -2,7 +2,7 @@ child_process = require 'child_process'
 Dsl = require './dsl'
 httpSync = require 'http-sync'
 
-class MockApiServer
+class MockApi
   constructor: (@options) ->
 
   start: (done) ->
@@ -42,7 +42,7 @@ class MockApiServer
     request.end()
 
 module.exports = (options, cb) ->
-  server = new MockApiServer options
+  server = new MockApi options
   server.start (err) ->
     return unless cb?
     cb err, server
