@@ -14,7 +14,7 @@ class MockApiServer
 
     child_process.fork __dirname + '/../bin/mock-api-server', args,
       silent: false
-    setTimeout done, 1000
+    setTimeout done, 500
  
   stop: ->
     @_sendCommand 'stop'
