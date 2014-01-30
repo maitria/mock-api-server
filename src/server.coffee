@@ -25,6 +25,12 @@ class Server
       else if '--port' == @argv[0]
         @argv.shift()
         options.port = @argv.shift() | 0
+      else if '--no-log-to-console' == @argv[0]
+        @argv.shift()
+        options.logToConsole = false
+      else if '--log-to-file' == @argv[0]
+        @argv.shift()
+        options.logToFile = @argv.shift()
       else
         console.log 'Unknown option `' + @argv[0] + '` (use --help).'
         process.exit 1
