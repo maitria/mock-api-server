@@ -1,44 +1,8 @@
 #!/usr/bin/env node
 
-var argv = process.argv.slice(2);
-var help = false;
-var options = {"logToConsole": true};
-
-while (argv.length > 0) {
-  if ('--help' == argv[0]) {
-    help = true;
-    argv.shift();
-  } else if ('--port' == argv[0]) {
-    argv.shift();
-    options.port = argv.shift() | 0;
-  } else {
-    console.log('Unknown option `' + argv[0] + '` (use --help).');
-    process.exit(1);
-  }
-}
-
-if (help) {
-  console.log(
-      "mock-api-server: A stand-in for a real API server\n" +
-      "\n" +
-      "Usage:\n" +
-      "\n" +
-      "  mock-api-server --port PORT\n" +
-      "\n" +
-      "Options:\n" +
-      "\n" +
-      "  --port PORT           The port to listen on (required).\n"
-      );
-  process.exit(0);
-}
-
-if (!options.port) {
-  console.log("mock-api-server: No PORT supplied (see --help).");
-  process.exit(1);
-}
-
 var path = require('path');
 var fs = require('fs');
 var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
-var mockApiServer = require(lib + '/index');
-mockApiServer(options, function (err, server) {});
+var Server = require(lib + '/server');
+var argv = process.argv.slice(2);
+new Server(argv).run();
