@@ -15,11 +15,12 @@ From the command-line:
 To boot once for a test:
 
 ```javascript
-var mockApiServer = require('mock-api-server');
-mockApiServer({"port": 7000}, function(err, server) {
+var MockApi = require('mock-api-server');
+var api = new MockApi({"port": 7000});
+api.start(function(err) {
   // ... do stuff ...
-  server.stop();
-});
+  api.stop();
+})
 ```
 
 See `test/server_test.coffee` for more detailed examples.<!-- x_ -->
@@ -30,7 +31,7 @@ suite.
 
 ## Options
 
-`mockApiServer()` supports the following options:
+The `MockApi` supports the following options:
 
 <table>
 <tr>

@@ -41,8 +41,4 @@ class MockApi
       path: "/mock-api/#{name}"
     request.end()
 
-module.exports = (options, cb) ->
-  server = new MockApi options
-  server.start (err) ->
-    return unless cb?
-    cb err, server
+module.exports = MockApi

@@ -1,13 +1,14 @@
 assert = require 'assert'
 http = require 'http'
-mockApiServer = require '../lib/index.js'
+MockApi = require '../lib/index.js'
 {readFile, unlink} = require 'fs'
 {extend, findWhere, identity, map, pick} = require 'underscore'
 
 doRequest = (options, configureServer, testFn) ->
   apiServerOptions = pick options, 'port', 'logToFile'
 
-  mockApiServer apiServerOptions, (err, server) ->
+  server = new MockApi apiServerOptions
+  server.start (err) ->
     configureServer server
 
     requestOptions =
