@@ -23,6 +23,14 @@ api.start(function(err) {
 })
 ```
 
+To connect to an existing server:
+
+```javascript
+var MockApi = require('mock-api-server');
+var api = new MockApi({"port": 7000});
+api.reset(); // Or whatever you want to do.
+```
+
 See `test/server_test.coffee` for more detailed examples.<!-- x_ -->
 
 If you are using Mocha, you can also boot the server in a `before` clause.
@@ -60,7 +68,7 @@ directory and its subdirectories has the same structure as your API.  For
 example, to serve an endpoint `/v2/foobizzle`, populate the file
 `test/mock-api/GET/v2/foobizzle.json`.
 
-### Responsing to HTTP Methods
+### Responding to HTTP Methods
 
 Files in the `test/mock-api/GET` subdirectory are used for GET requests.  Files
 in `test/mock-api/PUT` subdirectory are used for PUT requests, and so forth.
@@ -89,3 +97,13 @@ Note that most shells will interpret `?`, `*`, and `&`, so to create these
 files, you will have to backslash them.  For example:
 
     $ touch test/mock-api/GET/v2/foobizzle.json\?type=\*search\*\&s=foo
+
+## Live Responses
+
+You can tell the API server to respond to a particular request like so:
+
+```javascript
+api.respondTo('/foo/bar').with({status: 'OK'});
+```
+
+This will be active until the next time `api.reset()` is called.
