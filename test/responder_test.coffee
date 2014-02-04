@@ -10,6 +10,13 @@ describe 'Responder', ->
     '/PUT/v2/foo/bar.json': 'answer6'
     '/GET/v2/foo/baz.json': 'answer2'
     '/GET/v2/foo/baz.json?x=hello*world*': 'answer4'
+    '/GET/v2/data.json':
+      one: 1
+      two: 2
+      fortyTwo: [
+        { x: 69 },
+        { y: { z: 96 } }
+      ]
 
   doMethod = (method) ->
     (path, query) ->
@@ -81,13 +88,21 @@ describe 'Responder', ->
       response = responder.respondTo getRequest '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', response
 
-    it 'allows use of a function to modify the response', ->
+    it 'allows replacing a key in a response', ->
       spec = new ResponseSpecification
-        path: '/v2/foo/bar.json'
+        path: '/v2/data.json'
         method: 'GET'
         query: {}
-        content: (content) ->
-          '<<' + content + '>>'
+        replaceKey: 'fortyTwo[1].y'
+        replaceValue: [ 88 ]
+
+      expected =
+        one: 1
+        two: 2
+        fortyTwo: [
+          { x: 69 },
+          { y: [ 88 ] }
+        ]
 
       responder = new Responder(data).withResponseSpecification spec
-      assert.equal '<<answer1>>', responder.respondTo getRequest '/v2/foo/bar.json'
+      assert.deepEqual expected, responder.respondTo getRequest '/v2/data.json'

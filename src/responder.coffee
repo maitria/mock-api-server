@@ -6,9 +6,15 @@ stripExtension = (path) ->
   path.replace /\.json$/, ''
 
 class ResponseSpecification
-  constructor: ({@method, @path, @query, @content, @changeNumber}) ->
+  constructor: (options) ->
+    {@method, @path, @query, @content, @changeNumber} = options
     @path = stripExtension @path
     @changeNumber ?= 0
+
+    if options.replaceKey?
+      @content = (content) =>
+        eval "content.#{options.replaceKey} = " + JSON.stringify(options.replaceValue)
+        content
 
   matches: (request) ->
     return false unless stripExtension(request.path) == @path
