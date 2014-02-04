@@ -6,11 +6,6 @@ url = require 'url'
 stripExtension = (path) ->
   path.replace /\.json$/, ''
 
-keyReplacer = (options) ->
-  (content) ->
-    eval "content.#{options.replaceKey} = " + JSON.stringify(options.replaceValue)
-    content
-
 class ResponseSpecification
   constructor: (options) ->
     {@method, @path, @query, @content, @changeNumber} = options
