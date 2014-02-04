@@ -1,9 +1,15 @@
 patternMatcher = require './pattern_matcher'
 {compose, each, extend, filter, identity, map, size, sortBy} = require 'underscore'
 url = require 'url'
+{keyReplacer} = require './manipulations'
 
 stripExtension = (path) ->
   path.replace /\.json$/, ''
+
+keyReplacer = (options) ->
+  (content) ->
+    eval "content.#{options.replaceKey} = " + JSON.stringify(options.replaceValue)
+    content
 
 class ResponseSpecification
   constructor: (options) ->
@@ -12,9 +18,7 @@ class ResponseSpecification
     @changeNumber ?= 0
 
     if options.replaceKey?
-      @content = (content) =>
-        eval "content.#{options.replaceKey} = " + JSON.stringify(options.replaceValue)
-        content
+      @content = keyReplacer options
 
   matches: (request) ->
     return false unless stripExtension(request.path) == @path
