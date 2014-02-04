@@ -19,16 +19,6 @@ describe 'Responder', ->
         { y: { z: 96 } }
       ]
 
-  doMethod = (method) ->
-    (path, query) ->
-      new Responder(data).respondTo
-        method: method
-        query: query || {}
-        path: path
-
-  get = doMethod 'GET'
-  put = doMethod 'PUT'
-
   responder = undefined
   beforeEach ->
     responder = new Responder data
@@ -38,6 +28,16 @@ describe 'Responder', ->
 
   respondTo = (path) ->
     new Dsl saveSpec, [path]
+
+  doMethod = (method) ->
+    (path, query) ->
+      responder.respondTo
+        method: method
+        query: query || {}
+        path: path
+
+  get = doMethod 'GET'
+  put = doMethod 'PUT'
 
   it 'finds a simple request in the map', ->
     assert.equal 'answer1', get '/v2/foo/bar.json'
@@ -65,38 +65,23 @@ describe 'Responder', ->
 
   context 'with a run-time response spec', ->
 
-    responderWith = (path) ->
-      spec = new ResponseSpecification
-        path: path
-        method: 'GET'
-        content: 'stuffed-in-response'
-        query: {}
-      new Responder(data).withResponseSpecification spec
-
-    getRequest = (path, query) ->
-      method: 'GET'
-      query: query ? {}
-      path: path
-
     it 'allows adding a response at run-time', ->
-      responder = responderWith '/v2/foo/slime.json'
-      response = responder.respondTo getRequest '/v2/foo/slime.json'
+      respondTo('/v2/foo/slime.json').with('stuffed-in-response')
+      response = get '/v2/foo/slime.json'
       assert.equal 'stuffed-in-response', response
 
     it 'does not modified the original responder', ->
-      original = new Responder(data)
-      newSpec = new ResponseSpecification
-        path: '/v2/foo/slime.json'
+      original = responder
+      respondTo('/v2/foo/slime.json').with('stuffed-in-response')
+      response = original.respondTo
         method: 'GET'
-        content: 'stuffed-in-response'
         query: {}
-      original.withResponseSpecification newSpec
-      response = original.respondTo getRequest '/v2/foo/slime.json'
+        path: '/v2/foo/slime.json'
       assert.strictEqual undefined, response
 
     it 'allows overriding pre-existing entries', ->
       respondTo('/v2/foo/bar.json').with('stuffed-in-response')
-      response = responder.respondTo getRequest '/v2/foo/bar.json'
+      response = get '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', response
 
     it 'allows replacing a key in a response', ->
@@ -109,4 +94,4 @@ describe 'Responder', ->
           { y: [ 88 ] }
         ]
 
-      assert.deepEqual expected, responder.respondTo getRequest '/v2/data.json'
+      assert.deepEqual expected, get '/v2/data.json'
