@@ -67,22 +67,17 @@ describe 'Responder', ->
 
     it 'allows adding a response at run-time', ->
       respondTo('/v2/foo/slime.json').with('stuffed-in-response')
-      response = get '/v2/foo/slime.json'
-      assert.equal 'stuffed-in-response', response
+      assert.equal 'stuffed-in-response', get '/v2/foo/slime.json'
 
     it 'does not modified the original responder', ->
       original = responder
       respondTo('/v2/foo/slime.json').with('stuffed-in-response')
-      response = original.respondTo
-        method: 'GET'
-        query: {}
-        path: '/v2/foo/slime.json'
-      assert.strictEqual undefined, response
+      responder = original
+      assert.strictEqual undefined, get '/v2/foo/slime.json'
 
     it 'allows overriding pre-existing entries', ->
       respondTo('/v2/foo/bar.json').with('stuffed-in-response')
-      response = get '/v2/foo/bar.json'
-      assert.equal 'stuffed-in-response', response
+      assert.equal 'stuffed-in-response', get '/v2/foo/bar.json'
 
     it 'allows replacing a key in a response', ->
       respondTo('/v2/data.json').byReplacing('fortyTwo[1].y').with([ 88 ])
