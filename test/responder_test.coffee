@@ -29,6 +29,16 @@ describe 'Responder', ->
   get = doMethod 'GET'
   put = doMethod 'PUT'
 
+  responder = undefined
+  beforeEach ->
+    responder = new Responder data
+
+  saveSpec = (s) ->
+    responder = responder.withResponseSpecification new ResponseSpecification s
+
+  respondTo = (path) ->
+    new Dsl saveSpec, [path]
+
   it 'finds a simple request in the map', ->
     assert.equal 'answer1', get '/v2/foo/bar.json'
 
@@ -85,17 +95,12 @@ describe 'Responder', ->
       assert.strictEqual undefined, response
 
     it 'allows overriding pre-existing entries', ->
-      responder = responderWith '/v2/foo/bar.json'
+      respondTo('/v2/foo/bar.json').with('stuffed-in-response')
       response = responder.respondTo getRequest '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', response
 
     it 'allows replacing a key in a response', ->
-      spec = undefined
-      setSpec = (s) ->
-        spec = new ResponseSpecification s
-
-      new Dsl(setSpec, ['/v2/data.json']).byReplacing('fortyTwo[1].y').with([ 88 ])
-
+      respondTo('/v2/data.json').byReplacing('fortyTwo[1].y').with([ 88 ])
       expected =
         one: 1
         two: 2
@@ -104,5 +109,4 @@ describe 'Responder', ->
           { y: [ 88 ] }
         ]
 
-      responder = new Responder(data).withResponseSpecification spec
       assert.deepEqual expected, responder.respondTo getRequest '/v2/data.json'
