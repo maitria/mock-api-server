@@ -1,5 +1,6 @@
 assert = require 'assert'
 {Responder, ResponseSpecification} = require '../src/responder'
+Dsl = require '../src/dsl'
 
 describe 'Responder', ->
 
@@ -89,12 +90,11 @@ describe 'Responder', ->
       assert.equal 'stuffed-in-response', response
 
     it 'allows replacing a key in a response', ->
-      spec = new ResponseSpecification
-        path: '/v2/data.json'
-        method: 'GET'
-        query: {}
-        replaceKey: 'fortyTwo[1].y'
-        replaceValue: [ 88 ]
+      spec = undefined
+      setSpec = (s) ->
+        spec = new ResponseSpecification s
+
+      new Dsl(setSpec, ['/v2/data.json']).byReplacing('fortyTwo[1].y').with([ 88 ])
 
       expected =
         one: 1
