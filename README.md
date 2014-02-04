@@ -107,3 +107,9 @@ api.respondTo('/foo/bar').with({status: 'OK'});
 ```
 
 This will be active until the next time `api.reset()` is called.
+
+You can modify an existing response with:
+
+```javascript
+api.respondTo('/foo/bar').byReplacing('foo.bar[1].baz').with([ 76 ]);
+```
