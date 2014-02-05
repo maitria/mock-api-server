@@ -1,3 +1,8 @@
+0.3.2
+-----
+
+* Fix strange hanging because of fork
+
 0.3.1
 -----
 
