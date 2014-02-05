@@ -12,7 +12,7 @@ class MockApi
       args.push '--log-to-file'
       args.push @options.logToFile
 
-    child_process.fork __dirname + '/../bin/mock-api-server', args
+    child_process.spawn "#{__dirname}/../bin/mock-api-server", args
     setTimeout done, 500
  
   stop: ->
