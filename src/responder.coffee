@@ -8,7 +8,8 @@ stripExtension = (path) ->
 
 class ResponseSpecification
   constructor: (options) ->
-    {@method, @path, @query, @content, @changeNumber} = options
+    {@method, @path, @query, @content, @status, @changeNumber} = options
+
     @path = stripExtension @path
     @changeNumber ?= 0
 
@@ -42,13 +43,17 @@ class Responder
 
     contentTransform = identity
     response = undefined
+    status = undefined
 
     each allowedEntries, (entry) ->
       if typeof entry.content == 'function'
         contentTransform = compose entry.content, contentTransform
       else if typeof response == 'undefined'
         response = contentTransform entry.content
-    response
+
+      status ?= entry.status
+
+    {status: status, body: response}
 
   withResponseSpecification: (newSpec) ->
     answer = @_freshCopyWith
@@ -72,16 +77,16 @@ class Responder
   _buildResponseMap: (fsHash) ->
     specs = map fsHash, (response, filename) =>
       {body, status} = response
-      @_buildStaticResponseEntry filename, body
+      @_buildStaticResponseEntry filename, body, status
     @_sortSpecs specs
 
   _sortSpecs: (specs) ->
     sortBy specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
-  _buildStaticResponseEntry: (filename, content) ->
+  _buildStaticResponseEntry: (filename, content, status) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {content,method,path,query}
+    new ResponseSpecification {content,status,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}

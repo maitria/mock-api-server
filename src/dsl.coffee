@@ -15,7 +15,8 @@ class Dsl
         path: @_path
         method: 'GET'
         query: {}
-        content: what
+        content: what.body
+        status: what.status
       when 'replaceKey'
         path: @_path
         method: 'GET'

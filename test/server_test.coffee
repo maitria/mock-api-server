@@ -63,7 +63,9 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        answer: "Modified Hello, World!"
+        status: 200
+        body:
+          answer: "Modified Hello, World!"
 
     doRequest options, configureServer, (pageContents) ->
       assert.equal JSON.parse(pageContents).answer, "Modified Hello, World!"
@@ -75,7 +77,9 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        answer: "Modified Hello, World!"
+        status: 200
+        body:
+          answer: "Modified Hello, World!"
       server.reset()
 
     doRequest options, configureServer, (pageContents) ->

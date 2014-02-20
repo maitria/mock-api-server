@@ -98,8 +98,8 @@ class Server
     @logger.info '[MOCK-REQUEST]', request
     response = @responder.respondTo request
     return next() if response == undefined
-    @logger.info '[MOCK-RESPONSE]', response
+    @logger.info '[MOCK-RESPONSE]', response.body
     res.header 'Content-Type', 'application/json'
-    res.send JSON.stringify response
+    res.send JSON.stringify response.body
  
 module.exports = Server
