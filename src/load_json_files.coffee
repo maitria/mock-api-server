@@ -54,10 +54,13 @@ jsonLoadingActions = (files) ->
         # Ignore the second line of the file.
         secondLine = lines.shift()
 
-        # Build JSON back up from the rest of the lines.
-        json = lines.join("\n")
+        # Grab the status code from the first line.
+        status = firstLine.match(/\d{3}/)[0]
 
-        done null, { body: JSON.parse(json), status: 200 }
+        # Build JSON body back up from the rest of the lines.
+        body = JSON.parse lines.join("\n")
+
+        done null, { body, status }
   actions
 
 module.exports = (path, done) ->

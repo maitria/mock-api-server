@@ -17,6 +17,9 @@ describe 'loading json files', ->
   it 'has the status code', ->
     assert.equal 200, result['/GET/v2/hello.json'].status
 
+  it 'supports non 200 status codes', ->
+    assert.equal 404, result['/GET/v2/junk.json'].status
+
   it 'has parsed the body', ->
     assert.equal "Hello, World!", result['/GET/v2/hello.json'].body.answer
 
