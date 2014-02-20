@@ -70,8 +70,9 @@ class Responder
     {method,path}
 
   _buildResponseMap: (fsHash) ->
-    specs = map fsHash, (content, filename) =>
-      @_buildStaticResponseEntry filename, content
+    specs = map fsHash, (response, filename) =>
+      {body, status} = response
+      @_buildStaticResponseEntry filename, body
     @_sortSpecs specs
 
   _sortSpecs: (specs) ->

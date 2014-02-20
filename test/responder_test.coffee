@@ -5,19 +5,33 @@ Dsl = require '../src/dsl'
 describe 'Responder', ->
 
   data =
-    '/GET/v2/foo/bar.json': 'answer1'
-    '/GET/v2/foo/bar.json?p=76': 'answer3'
-    '/GET/v2/foo/bar.json?p=76&j=77': 'answer5'
-    '/PUT/v2/foo/bar.json': 'answer6'
-    '/GET/v2/foo/baz.json': 'answer2'
-    '/GET/v2/foo/baz.json?x=hello*world*': 'answer4'
+    '/GET/v2/foo/bar.json':
+      status: 200
+      body: 'answer1'
+    '/GET/v2/foo/bar.json?p=76':
+      status: 200
+      body: 'answer3'
+    '/GET/v2/foo/bar.json?p=76&j=77':
+      status: 200
+      body: 'answer5'
+    '/PUT/v2/foo/bar.json':
+      status: 200
+      body: 'answer6'
+    '/GET/v2/foo/baz.json':
+      status: 200
+      body: 'answer2'
+    '/GET/v2/foo/baz.json?x=hello*world*':
+      status: 200
+      body: 'answer4'
     '/GET/v2/data.json':
-      one: 1
-      two: 2
-      fortyTwo: [
-        { x: 69 },
-        { y: { z: 96 } }
-      ]
+      status: 200
+      body:
+        one: 1
+        two: 2
+        fortyTwo: [
+          { x: 69 },
+          { y: { z: 96 } }
+        ]
 
   responder = undefined
   beforeEach ->

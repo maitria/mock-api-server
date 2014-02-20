@@ -60,8 +60,17 @@ class Server
     @app.get '/mock-api/stop', @_stop
     @app.get '/mock-api/reset', @_reset
     @app.post '/mock-api/add-response', @_addResponse
+
     loadJsonFiles 'test/mock-api', (err, hash) =>
-      @originalResponder = @responder = new Responder hash
+
+      # Convert `hash` into new format expected by Responder.
+      hashWithBodyAndStatus = {}
+      for endpoint, responseBody of hash
+        hashWithBodyAndStatus[endpoint] =
+          status: 200
+          body: responseBody
+
+      @originalResponder = @responder = new Responder hashWithBodyAndStatus
       @server = @app.listen @options.port, done
  
   _stop: (req, res) =>
