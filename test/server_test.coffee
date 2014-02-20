@@ -87,3 +87,18 @@ describe 'a mock API server', ->
       assert.equal JSON.parse(body).answer, "Hello, World!"
       assert.equal 200, status
       done()
+
+  it 'supports non-200 responses', (done) ->
+    options =
+      port: 7005
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with
+        status: 404
+        body:
+          answer: "Not Found"
+
+    doRequest options, configureServer, ({body, status}) ->
+      assert.equal JSON.parse(body).answer, "Not Found"
+      assert.equal 404, status
+      done()
