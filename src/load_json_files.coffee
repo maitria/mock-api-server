@@ -44,7 +44,20 @@ jsonLoadingActions = (files) ->
     actions[file.resultPath] = (done) ->
       fs.readFile file.path, (err, contents) ->
         return done err if err?
-        done null, JSON.parse contents
+
+        # Grab all lines.
+        lines = contents.toString('utf-8').split("\n")
+
+        # Ignore the first line of the file.
+        firstLine = lines.shift()
+
+        # Ignore the second line of the file.
+        secondLine = lines.shift()
+
+        # Build JSON back up from the rest of the lines.
+        json = lines.join("\n")
+
+        done null, JSON.parse json
   actions
 
 module.exports = (path, done) ->
