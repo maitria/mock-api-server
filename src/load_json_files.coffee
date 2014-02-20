@@ -57,7 +57,7 @@ jsonLoadingActions = (files) ->
         # Build JSON back up from the rest of the lines.
         json = lines.join("\n")
 
-        done null, JSON.parse json
+        done null, { body: JSON.parse(json), status: 200 }
   actions
 
 module.exports = (path, done) ->

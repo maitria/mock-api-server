@@ -14,8 +14,11 @@ describe 'loading json files', ->
   it 'has entries for the files we know about', ->
     assert result['/GET/v2/hello.json']
 
-  it 'has parsed the contents', ->
-    assert.equal "Hello, World!", result['/GET/v2/hello.json'].answer
+  it 'has the status code', ->
+    assert.equal 200, result['/GET/v2/hello.json'].status
+
+  it 'has parsed the body', ->
+    assert.equal "Hello, World!", result['/GET/v2/hello.json'].body.answer
 
   context 'when we have .DS_Store files', ->
     before ->
