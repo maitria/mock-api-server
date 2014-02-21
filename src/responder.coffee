@@ -42,18 +42,18 @@ class Responder
     return undefined if allowedEntries.length == 0
 
     contentTransform = identity
-    response = undefined
+    body = undefined
     status = undefined
 
     each allowedEntries, (entry) ->
       if typeof entry.content == 'function'
         contentTransform = compose entry.content, contentTransform
-      else if typeof response == 'undefined'
-        response = contentTransform entry.content
+      else if typeof body == 'undefined'
+        body = contentTransform entry.content
 
       status ?= entry.status
 
-    {status: status, body: response}
+    {status, body}
 
   withResponseSpecification: (newSpec) ->
     answer = @_freshCopyWith
@@ -76,17 +76,16 @@ class Responder
 
   _buildResponseMap: (fsHash) ->
     specs = map fsHash, (response, filename) =>
-      {body, status} = response
-      @_buildStaticResponseEntry filename, body, status
+      @_buildStaticResponseEntry filename, response
     @_sortSpecs specs
 
   _sortSpecs: (specs) ->
     sortBy specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
-  _buildStaticResponseEntry: (filename, content, status) ->
+  _buildStaticResponseEntry: (filename, {status, body}) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {content,status,method,path,query}
+    new ResponseSpecification {content: body,status,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}
