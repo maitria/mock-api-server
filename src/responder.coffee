@@ -8,12 +8,13 @@ stripExtension = (path) ->
 
 class ResponseSpecification
   constructor: (options) ->
-    {@method, @path, @query, @content, @changeNumber} = options
+    {@method, @path, @query, @body, @statusCode, @changeNumber} = options
+
     @path = stripExtension @path
     @changeNumber ?= 0
 
     if options.replaceKey?
-      @content = keyReplacer options
+      @body = keyReplacer options
 
   matches: (request) ->
     return false unless stripExtension(request.path) == @path
@@ -40,15 +41,19 @@ class Responder
       entry.matches request
     return undefined if allowedEntries.length == 0
 
-    contentTransform = identity
-    response = undefined
+    bodyTransform = identity
+    body = undefined
+    statusCode = undefined
 
     each allowedEntries, (entry) ->
-      if typeof entry.content == 'function'
-        contentTransform = compose entry.content, contentTransform
-      else if typeof response == 'undefined'
-        response = contentTransform entry.content
-    response
+      if typeof entry.body == 'function'
+        bodyTransform = compose entry.body, bodyTransform
+      else if typeof body == 'undefined'
+        body = bodyTransform entry.body
+
+      statusCode ?= entry.statusCode
+
+    {statusCode, body}
 
   withResponseSpecification: (newSpec) ->
     answer = @_freshCopyWith
@@ -70,17 +75,17 @@ class Responder
     {method,path}
 
   _buildResponseMap: (fsHash) ->
-    specs = map fsHash, (content, filename) =>
-      @_buildStaticResponseEntry filename, content
+    specs = map fsHash, (response, filename) =>
+      @_buildStaticResponseEntry filename, response
     @_sortSpecs specs
 
   _sortSpecs: (specs) ->
     sortBy specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
-  _buildStaticResponseEntry: (filename, content) ->
+  _buildStaticResponseEntry: (filename, {body, statusCode}) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {content,method,path,query}
+    new ResponseSpecification {body,statusCode,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}

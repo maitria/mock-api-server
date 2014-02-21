@@ -1,5 +1,6 @@
 express = require 'express'
-loadJsonFiles = require './load_json_files'
+loadFiles = require './load_files'
+parseJsonFiles = require './parse_json_files'
 lumber = require 'clumber'
 mockApiServer = require './index'
 {pick} = require 'underscore'
@@ -60,10 +61,11 @@ class Server
     @app.get '/mock-api/stop', @_stop
     @app.get '/mock-api/reset', @_reset
     @app.post '/mock-api/add-response', @_addResponse
-    loadJsonFiles 'test/mock-api', (err, hash) =>
-      @originalResponder = @responder = new Responder hash
+
+    loadFiles 'test/mock-api', (err, fileHash) =>
+      @originalResponder = @responder = new Responder parseJsonFiles fileHash
       @server = @app.listen @options.port, done
- 
+
   _stop: (req, res) =>
     @logger.info '[STOPPING-SERVER]'
     die = =>
@@ -97,8 +99,9 @@ class Server
     @logger.info '[MOCK-REQUEST]', request
     response = @responder.respondTo request
     return next() if response == undefined
-    @logger.info '[MOCK-RESPONSE]', response
+    @logger.info '[MOCK-RESPONSE]', response.body
     res.header 'Content-Type', 'application/json'
-    res.send JSON.stringify response
+    res.status response.statusCode
+    res.send JSON.stringify response.body
  
 module.exports = Server

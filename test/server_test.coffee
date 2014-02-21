@@ -18,13 +18,12 @@ doRequest = (options, configureServer, testFn) ->
       path: '/v2/hello'
 
     request = http.request requestOptions, (res) ->
-      assert.equal 200, res.statusCode
       pageContents = ""
       res.on 'data', (chunk) ->
         pageContents += chunk
       res.on 'end', ->
         server.stop()
-        testFn pageContents
+        testFn {statusCode: res.statusCode, body: pageContents}
     request.end()
 
 describe 'a mock API server', ->
@@ -33,8 +32,9 @@ describe 'a mock API server', ->
     options =
       port: 7001
 
-    doRequest options, identity, (pageContents) ->
-      assert.equal JSON.parse(pageContents).answer, "Hello, World!"
+    doRequest options, identity, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, "Hello, World!"
+      assert.equal 200, statusCode
       done()
 
   it 'logs to a file when configured', (done) ->
@@ -63,10 +63,13 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        answer: "Modified Hello, World!"
+        statusCode: 200
+        body:
+          answer: "Modified Hello, World!"
 
-    doRequest options, configureServer, (pageContents) ->
-      assert.equal JSON.parse(pageContents).answer, "Modified Hello, World!"
+    doRequest options, configureServer, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, "Modified Hello, World!"
+      assert.equal 200, statusCode
       done()
 
   it 'can reset the state', (done) ->
@@ -75,9 +78,27 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        answer: "Modified Hello, World!"
+        statusCode: 200
+        body:
+          answer: "Modified Hello, World!"
       server.reset()
 
-    doRequest options, configureServer, (pageContents) ->
-      assert.equal JSON.parse(pageContents).answer, "Hello, World!"
+    doRequest options, configureServer, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, "Hello, World!"
+      assert.equal 200, statusCode
+      done()
+
+  it 'supports non-200 responses', (done) ->
+    options =
+      port: 7005
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with
+        statusCode: 404
+        body:
+          answer: "Not Found"
+
+    doRequest options, configureServer, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, "Not Found"
+      assert.equal 404, statusCode
       done()
