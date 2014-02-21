@@ -8,13 +8,13 @@ stripExtension = (path) ->
 
 class ResponseSpecification
   constructor: (options) ->
-    {@method, @path, @query, @content, @status, @changeNumber} = options
+    {@method, @path, @query, @body, @status, @changeNumber} = options
 
     @path = stripExtension @path
     @changeNumber ?= 0
 
     if options.replaceKey?
-      @content = keyReplacer options
+      @body = keyReplacer options
 
   matches: (request) ->
     return false unless stripExtension(request.path) == @path
@@ -41,15 +41,15 @@ class Responder
       entry.matches request
     return undefined if allowedEntries.length == 0
 
-    contentTransform = identity
+    bodyTransform = identity
     body = undefined
     status = undefined
 
     each allowedEntries, (entry) ->
-      if typeof entry.content == 'function'
-        contentTransform = compose entry.content, contentTransform
+      if typeof entry.body == 'function'
+        bodyTransform = compose entry.body, bodyTransform
       else if typeof body == 'undefined'
-        body = contentTransform entry.content
+        body = bodyTransform entry.body
 
       status ?= entry.status
 
@@ -83,9 +83,9 @@ class Responder
     sortBy specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
-  _buildStaticResponseEntry: (filename, {status, body}) ->
+  _buildStaticResponseEntry: (filename, {body, status}) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {content: body,status,method,path,query}
+    new ResponseSpecification {body,status,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}
