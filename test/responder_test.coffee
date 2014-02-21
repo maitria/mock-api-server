@@ -87,7 +87,9 @@ describe 'Responder', ->
   context 'with a run-time response spec', ->
 
     it 'allows adding a response at run-time', ->
-      respondTo('/v2/foo/slime.json').with({ statusCode: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/slime.json').with
+        statusCode: 200
+        body: 'stuffed-in-response'
 
       {body, statusCode} = get '/v2/foo/slime.json'
       assert.equal 'stuffed-in-response', body
@@ -95,12 +97,16 @@ describe 'Responder', ->
 
     it 'does not modified the original responder', ->
       original = responder
-      respondTo('/v2/foo/slime.json').with({ statusCode: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/slime.json').with
+        statusCode: 200
+        body: 'stuffed-in-response'
       responder = original
       assert.strictEqual undefined, get '/v2/foo/slime.json'
 
     it 'allows overriding pre-existing entries', ->
-      respondTo('/v2/foo/bar.json').with({ statusCode: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/bar.json').with
+        statusCode: 200
+        body: 'stuffed-in-response'
 
       {body, statusCode} = get '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', body
