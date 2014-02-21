@@ -6,25 +6,25 @@ describe 'Responder', ->
 
   data =
     '/GET/v2/foo/bar.json':
-      status: 200
+      statusCode: 200
       body: 'answer1'
     '/GET/v2/foo/bar.json?p=76':
-      status: 200
+      statusCode: 200
       body: 'answer3'
     '/GET/v2/foo/bar.json?p=76&j=77':
-      status: 200
+      statusCode: 200
       body: 'answer5'
     '/PUT/v2/foo/bar.json':
-      status: 200
+      statusCode: 200
       body: 'answer6'
     '/GET/v2/foo/baz.json':
-      status: 200
+      statusCode: 200
       body: 'answer2'
     '/GET/v2/foo/baz.json?x=hello*world*':
-      status: 200
+      statusCode: 200
       body: 'answer4'
     '/GET/v2/data.json':
-      status: 200
+      statusCode: 200
       body:
         one: 1
         two: 2
@@ -54,22 +54,22 @@ describe 'Responder', ->
   put = doMethod 'PUT'
 
   it 'finds a simple request in the map', ->
-    {body, status} = get '/v2/foo/bar.json'
+    {body, statusCode} = get '/v2/foo/bar.json'
     assert.equal 'answer1', body
-    assert.equal 200, status
+    assert.equal 200, statusCode
 
   it 'finds a different simple request in the map', ->
-    {body, status} = get '/v2/foo/baz.json'
+    {body, statusCode} = get '/v2/foo/baz.json'
     assert.equal 'answer2', body
-    assert.equal 200, status
+    assert.equal 200, statusCode
 
   it 'answers undefined when no request is found', ->
     assert.strictEqual undefined, get '/v2/foo/quux.json'
 
   it 'finds a request without an extension', ->
-    {body, status} = get '/v2/foo/bar'
+    {body, statusCode} = get '/v2/foo/bar'
     assert.equal 'answer1', body
-    assert.equal 200, status
+    assert.equal 200, statusCode
 
   it 'uses query parameters to find a more specific response', ->
     assert.equal 'answer5', get('/v2/foo/bar', p: '76', j: '77').body
@@ -81,30 +81,30 @@ describe 'Responder', ->
     assert.equal 'answer2', get('/v2/foo/baz', x: 'helloorld').body
 
   it 'handles other methods', ->
-    {body, status} = put '/v2/foo/bar'
+    {body, statusCode} = put '/v2/foo/bar'
     assert.equal 'answer6', body
 
   context 'with a run-time response spec', ->
 
     it 'allows adding a response at run-time', ->
-      respondTo('/v2/foo/slime.json').with({ status: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/slime.json').with({ statusCode: 200, body: 'stuffed-in-response' })
 
-      {body, status} = get '/v2/foo/slime.json'
+      {body, statusCode} = get '/v2/foo/slime.json'
       assert.equal 'stuffed-in-response', body
-      assert.equal 200, status
+      assert.equal 200, statusCode
 
     it 'does not modified the original responder', ->
       original = responder
-      respondTo('/v2/foo/slime.json').with({ status: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/slime.json').with({ statusCode: 200, body: 'stuffed-in-response' })
       responder = original
       assert.strictEqual undefined, get '/v2/foo/slime.json'
 
     it 'allows overriding pre-existing entries', ->
-      respondTo('/v2/foo/bar.json').with({ status: 200, body: 'stuffed-in-response' })
+      respondTo('/v2/foo/bar.json').with({ statusCode: 200, body: 'stuffed-in-response' })
 
-      {body, status} = get '/v2/foo/bar.json'
+      {body, statusCode} = get '/v2/foo/bar.json'
       assert.equal 'stuffed-in-response', body
-      assert.equal 200, status
+      assert.equal 200, statusCode
 
     it 'allows replacing a key in a response', ->
       respondTo('/v2/data.json').byReplacing('fortyTwo[1].y').with([ 88 ])
@@ -116,6 +116,6 @@ describe 'Responder', ->
           { y: [ 88 ] }
         ]
 
-      {body, status} = get '/v2/data.json'
+      {body, statusCode} = get '/v2/data.json'
       assert.deepEqual expected, body
-      assert.equal 200, status
+      assert.equal 200, statusCode

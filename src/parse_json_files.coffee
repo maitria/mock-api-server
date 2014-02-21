@@ -13,9 +13,9 @@ module.exports = (fileHash) ->
     firstLine = lines.shift()
     secondLine = lines.shift()
 
-    status = parseStatusCode(firstLine)
+    statusCode = parseStatusCode(firstLine)
     body = JSON.parse lines.join("\n")
 
-    responseHash[path] = { status, body }
+    responseHash[path] = { statusCode, body }
 
   responseHash

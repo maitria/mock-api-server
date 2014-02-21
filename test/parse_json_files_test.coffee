@@ -13,9 +13,9 @@ describe 'loading json files', ->
   it 'has the status code', ->
     responseHash = parseJsonFiles @fileHash
 
-    assert.equal 200, responseHash['/GET/v2/hello.json'].status
-    assert.equal 404, responseHash['/GET/v2/junk.json'].status
-    assert.equal 200, responseHash['/POST/v2/hello.json'].status
+    assert.equal 200, responseHash['/GET/v2/hello.json'].statusCode
+    assert.equal 404, responseHash['/GET/v2/junk.json'].statusCode
+    assert.equal 200, responseHash['/POST/v2/hello.json'].statusCode
 
   it 'has the parsed body', ->
     responseHash = parseJsonFiles @fileHash

@@ -8,7 +8,7 @@ stripExtension = (path) ->
 
 class ResponseSpecification
   constructor: (options) ->
-    {@method, @path, @query, @body, @status, @changeNumber} = options
+    {@method, @path, @query, @body, @statusCode, @changeNumber} = options
 
     @path = stripExtension @path
     @changeNumber ?= 0
@@ -43,7 +43,7 @@ class Responder
 
     bodyTransform = identity
     body = undefined
-    status = undefined
+    statusCode = undefined
 
     each allowedEntries, (entry) ->
       if typeof entry.body == 'function'
@@ -51,9 +51,9 @@ class Responder
       else if typeof body == 'undefined'
         body = bodyTransform entry.body
 
-      status ?= entry.status
+      statusCode ?= entry.statusCode
 
-    {status, body}
+    {statusCode, body}
 
   withResponseSpecification: (newSpec) ->
     answer = @_freshCopyWith
@@ -83,9 +83,9 @@ class Responder
     sortBy specs, (spec) ->
       1e9 - 1000 * (size spec.query) - spec.changeNumber
 
-  _buildStaticResponseEntry: (filename, {body, status}) ->
+  _buildStaticResponseEntry: (filename, {body, statusCode}) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {body,status,method,path,query}
+    new ResponseSpecification {body,statusCode,method,path,query}
 
 module.exports = {Responder, ResponseSpecification}

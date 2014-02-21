@@ -16,7 +16,7 @@ class Dsl
         method: 'GET'
         query: {}
         body: what.body
-        status: what.status
+        statusCode: what.statusCode
       when 'replaceKey'
         path: @_path
         method: 'GET'

@@ -23,7 +23,7 @@ doRequest = (options, configureServer, testFn) ->
         pageContents += chunk
       res.on 'end', ->
         server.stop()
-        testFn {status: res.statusCode, body: pageContents}
+        testFn {statusCode: res.statusCode, body: pageContents}
     request.end()
 
 describe 'a mock API server', ->
@@ -32,9 +32,9 @@ describe 'a mock API server', ->
     options =
       port: 7001
 
-    doRequest options, identity, ({body, status}) ->
+    doRequest options, identity, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, "Hello, World!"
-      assert.equal 200, status
+      assert.equal 200, statusCode
       done()
 
   it 'logs to a file when configured', (done) ->
@@ -63,13 +63,13 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        status: 200
+        statusCode: 200
         body:
           answer: "Modified Hello, World!"
 
-    doRequest options, configureServer, ({body, status}) ->
+    doRequest options, configureServer, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, "Modified Hello, World!"
-      assert.equal 200, status
+      assert.equal 200, statusCode
       done()
 
   it 'can reset the state', (done) ->
@@ -78,14 +78,14 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        status: 200
+        statusCode: 200
         body:
           answer: "Modified Hello, World!"
       server.reset()
 
-    doRequest options, configureServer, ({body, status}) ->
+    doRequest options, configureServer, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, "Hello, World!"
-      assert.equal 200, status
+      assert.equal 200, statusCode
       done()
 
   it 'supports non-200 responses', (done) ->
@@ -94,11 +94,11 @@ describe 'a mock API server', ->
 
     configureServer = (server) ->
       server.respondTo('/v2/hello').with
-        status: 404
+        statusCode: 404
         body:
           answer: "Not Found"
 
-    doRequest options, configureServer, ({body, status}) ->
+    doRequest options, configureServer, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, "Not Found"
-      assert.equal 404, status
+      assert.equal 404, statusCode
       done()
