@@ -6,9 +6,9 @@ describe 'loading json files', ->
 
   before ->
     @fileHash =
-      '/GET/v2/hello.json': '// 200 OK\n\n{"answer": "Hello, World!"}\n'
-      '/GET/v2/junk.json': '// 404 NOT FOUND\n\n{"answer": "Not Found"}\n'
-      '/POST/v2/hello.json': '// 200 OK\n\n{"answer": "Goodbye Cruel World"}\n'
+      '/GET/v2/hello.json': '200 OK\n\n{"answer": "Hello, World!"}\n'
+      '/GET/v2/junk.json': '404 NOT FOUND\n\n{"answer": "Not Found"}\n'
+      '/POST/v2/hello.json': '200 OK\n\n{"answer": "Goodbye Cruel World"}\n'
 
   it 'has the status code', ->
     responseHash = parseJsonFiles @fileHash
