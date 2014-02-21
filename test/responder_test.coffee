@@ -95,6 +95,13 @@ describe 'Responder', ->
       assert.equal 'stuffed-in-response', body
       assert.equal 200, statusCode
 
+    it 'allows adding a response by providing a response body', ->
+      respondTo('/v2/foo/goo.json').with('something-gooey')
+
+      {body, statusCode} = get '/v2/foo/goo.json'
+      assert.equal 'something-gooey', body
+      assert.equal 200, statusCode
+
     it 'does not modified the original responder', ->
       original = responder
       respondTo('/v2/foo/slime.json').with

@@ -1,3 +1,4 @@
+{isObject} = require 'underscore'
 {ResponseSpecification} = require './responder'
 
 class Dsl
@@ -10,13 +11,19 @@ class Dsl
     this
 
   with: (what) ->
+    if isObject what
+      {body, statusCode} = what
+    else
+      body = what
+      statusCode = 200
+
     spec = switch @_withMode
       when 'replaceContent'
         path: @_path
         method: 'GET'
         query: {}
-        body: what.body
-        statusCode: what.statusCode
+        body: body
+        statusCode: statusCode
       when 'replaceKey'
         path: @_path
         method: 'GET'
