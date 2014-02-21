@@ -38,32 +38,14 @@ recursivelyFindFiles = (root, resultPrefix, done) ->
           results = results.concat subResults
         done null, results
 
-jsonLoadingActions = (files) ->
+loadingActions = (files) ->
   actions = {}
   each files, (file) ->
     actions[file.resultPath] = (done) ->
-      fs.readFile file.path, (err, contents) ->
-        return done err if err?
-
-        # Grab all lines.
-        lines = contents.toString('utf-8').split("\n")
-
-        # Ignore the first line of the file.
-        firstLine = lines.shift()
-
-        # Ignore the second line of the file.
-        secondLine = lines.shift()
-
-        # Grab the status code from the first line.
-        status = firstLine.match(/\d{3}/)[0]
-
-        # Build JSON body back up from the rest of the lines.
-        body = JSON.parse lines.join("\n")
-
-        done null, { body, status }
+      fs.readFile file.path, done
   actions
 
 module.exports = (path, done) ->
   recursivelyFindFiles path, '/', (err, files) ->
     return done err if err?
-    async.parallel jsonLoadingActions(files), done
+    async.parallel loadingActions(files), done

@@ -1,5 +1,5 @@
 assert = require 'assert'
-cannedFs = require '../src/load_json_files'
+cannedFs = require '../src/load_files'
 fs = require 'fs'
 
 describe 'loading json files', ->
@@ -12,16 +12,8 @@ describe 'loading json files', ->
       done()
 
   it 'has entries for the files we know about', ->
-    assert result['/GET/v2/hello.json']
-
-  it 'has the status code', ->
-    assert.equal 200, result['/GET/v2/hello.json'].status
-
-  it 'supports non 200 status codes', ->
-    assert.equal 404, result['/GET/v2/junk.json'].status
-
-  it 'has parsed the body', ->
-    assert.equal "Hello, World!", result['/GET/v2/hello.json'].body.answer
+    assert.equal result['/GET/v2/hello.json'].toString('utf-8'), '// 200 OK\n\n{"answer": "Hello, World!"}\n'
+    assert.equal result['/POST/v2/hello.json'].toString('utf-8'), '// 200 OK\n\n{"answer": "Goodbye Cruel World"}\n'
 
   context 'when we have .DS_Store files', ->
     before ->
