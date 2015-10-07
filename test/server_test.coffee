@@ -1,11 +1,12 @@
 assert = require 'assert'
 http = require 'http'
 MockApi = require '../lib/index.js'
+#MockApi = require '../src/index'
 {readFile, unlink} = require 'fs'
 {extend, findWhere, identity, map, pick} = require 'underscore'
 
 doRequest = (options, configureServer, testFn) ->
-  apiServerOptions = pick options, 'port', 'logToFile'
+  apiServerOptions = pick options, 'port', 'logToFile', 'testPath'
 
   server = new MockApi apiServerOptions
   server.start (err) ->
@@ -101,4 +102,13 @@ describe 'a mock API server', ->
     doRequest options, configureServer, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, "Not Found"
       assert.equal 404, statusCode
+      done()
+
+  it 'supports configurable test-path', ->
+    options =
+      testPath: 'test/mock-api-custom-path2'
+
+    doRequest options, identity, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, "Hello, World!"
+      assert.equal 200, statusCode
       done()
