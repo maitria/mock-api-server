@@ -8,6 +8,9 @@ class MockApi
   start: (done) ->
     args = ['--port', @options.port]
     args.push '--no-log-to-console' unless @options.logToConsole
+    if @options.testPath
+      args.push '--test-path'
+      args.push @options.testPath
     if @options.logToFile
       args.push '--log-to-file'
       args.push @options.logToFile

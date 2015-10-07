@@ -2,6 +2,7 @@
 -----
 
 * Upgrade http-sync
+* Configurable `test-path`
 
 0.4.0
 -----
