@@ -1,3 +1,5 @@
+'use strict'
+
 patternMatcher = require './pattern_matcher'
 {compose, each, extend, filter, identity, map, size, sortBy} = require 'underscore'
 url = require 'url'
@@ -26,7 +28,7 @@ class ResponseSpecification
 
   _matchesQuery: (query) ->
     matches = true
-    each @query, (value, name) =>
+    each @query, (value, name) ->
       if !patternMatcher(value) query[name]
         matches = false
     matches
@@ -72,7 +74,7 @@ class Responder
   _extractMethod: (filename) ->
     method = filename.split('/')[1]
     path = filename.replace /\/[^\/]*/, ''
-    {method,path}
+    {method, path}
 
   _buildResponseMap: (fsHash) ->
     specs = map fsHash, (response, filename) =>
@@ -86,6 +88,6 @@ class Responder
   _buildStaticResponseEntry: (filename, {body, statusCode}) ->
     {pathname, query} = url.parse filename, true
     {method, path} = @_extractMethod stripExtension pathname
-    new ResponseSpecification {body,statusCode,method,path,query}
+    new ResponseSpecification {body, statusCode, method, path, query}
 
 module.exports = {Responder, ResponseSpecification}

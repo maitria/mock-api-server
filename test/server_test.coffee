@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 http = require 'http'
 MockApi = require '../lib/index.js'
@@ -18,7 +20,7 @@ doRequest = (options, configureServer, testFn) ->
       path: '/v2/hello'
 
     request = http.request requestOptions, (res) ->
-      pageContents = ""
+      pageContents = ''
       res.on 'data', (chunk) ->
         pageContents += chunk
       res.on 'end', ->
@@ -33,7 +35,7 @@ describe 'a mock API server', ->
       port: 7001
 
     doRequest options, identity, ({body, statusCode}) ->
-      assert.equal JSON.parse(body).answer, "Hello, World!"
+      assert.equal JSON.parse(body).answer, 'Hello, World!'
       assert.equal 200, statusCode
       done()
 
@@ -41,14 +43,14 @@ describe 'a mock API server', ->
     unlink './tmp/foo.log', ->
       options =
         port: 7002
-        logToFile: "./tmp/foo.log"
+        logToFile: './tmp/foo.log'
 
       doRequest options, identity, ->
         readFile './tmp/foo.log', (err, buffer) ->
           throw err if err?
 
           logLines = map buffer.toString().split(/\n/), (s) ->
-            if s == ""
+            if s == ''
               null
             else
               JSON.parse s
@@ -65,10 +67,10 @@ describe 'a mock API server', ->
       server.respondTo('/v2/hello').with
         statusCode: 200
         body:
-          answer: "Modified Hello, World!"
+          answer: 'Modified Hello, World!'
 
     doRequest options, configureServer, ({body, statusCode}) ->
-      assert.equal JSON.parse(body).answer, "Modified Hello, World!"
+      assert.equal JSON.parse(body).answer, 'Modified Hello, World!'
       assert.equal 200, statusCode
       done()
 
@@ -80,11 +82,11 @@ describe 'a mock API server', ->
       server.respondTo('/v2/hello').with
         statusCode: 200
         body:
-          answer: "Modified Hello, World!"
+          answer: 'Modified Hello, World!'
       server.reset()
 
     doRequest options, configureServer, ({body, statusCode}) ->
-      assert.equal JSON.parse(body).answer, "Hello, World!"
+      assert.equal JSON.parse(body).answer, 'Hello, World!'
       assert.equal 200, statusCode
       done()
 
@@ -96,9 +98,9 @@ describe 'a mock API server', ->
       server.respondTo('/v2/hello').with
         statusCode: 404
         body:
-          answer: "Not Found"
+          answer: 'Not Found'
 
     doRequest options, configureServer, ({body, statusCode}) ->
-      assert.equal JSON.parse(body).answer, "Not Found"
+      assert.equal JSON.parse(body).answer, 'Not Found'
       assert.equal 404, statusCode
       done()

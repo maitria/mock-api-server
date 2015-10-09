@@ -1,3 +1,5 @@
+'use strict'
+
 {isObject} = require 'underscore'
 {ResponseSpecification} = require './responder'
 

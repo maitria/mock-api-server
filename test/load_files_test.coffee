@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 cannedFs = require '../src/load_files'
 fs = require 'fs'
@@ -6,7 +8,7 @@ describe 'loading json files', ->
 
   result = undefined
   before (done) ->
-    cannedFs './test/mock-api', (err, fsHash) =>
+    cannedFs './test/mock-api', (err, fsHash) ->
       assert !err
       result = fsHash
       done()

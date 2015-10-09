@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 parseJsonFiles = require '../src/parse_json_files'
 fs = require 'fs'
@@ -20,6 +22,6 @@ describe 'loading json files', ->
   it 'has the parsed body', ->
     responseHash = parseJsonFiles @fileHash
 
-    assert.equal "Hello, World!", responseHash['/GET/v2/hello.json'].body.answer
-    assert.equal "Not Found", responseHash['/GET/v2/junk.json'].body.answer
-    assert.equal "Goodbye Cruel World", responseHash['/POST/v2/hello.json'].body.answer
+    assert.equal 'Hello, World!', responseHash['/GET/v2/hello.json'].body.answer
+    assert.equal 'Not Found', responseHash['/GET/v2/junk.json'].body.answer
+    assert.equal 'Goodbye Cruel World', responseHash['/POST/v2/hello.json'].body.answer

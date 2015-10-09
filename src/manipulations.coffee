@@ -1,3 +1,5 @@
+'use strict'
+
 {each} = require 'underscore'
 
 parseKeyPath = (path) ->

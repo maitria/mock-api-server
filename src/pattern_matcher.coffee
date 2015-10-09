@@ -1,3 +1,5 @@
+'use strict'
+
 {each, keys} = require 'underscore'
 
 WILDCARD = '*'
@@ -28,7 +30,7 @@ compileNFA = (pattern) ->
   states[currentState] ?= failOnAny()
   successState = currentState
 
-  {states,successState}
+  {states, successState}
 
 module.exports =
 patternMatcher = (pattern) ->

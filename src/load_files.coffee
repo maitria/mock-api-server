@@ -1,3 +1,5 @@
+'use strict'
+
 async = require 'async'
 path = require 'path'
 fs = require 'fs'
