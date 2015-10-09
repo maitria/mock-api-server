@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "async": "~0.2.9",
-    "http-sync": "0.1.2",
+    "http-sync-4": "^1.0.0",
     "coffee-script-redux": "2.0.0-beta7",
     "express": "3.4.2",
     "underscore": "~1.4.4",
@@ -23,6 +23,5 @@
     "type": "git",
     "url": "git+ssh://git@github.com/maitria/mock-api-server.git"
   },
-  "optionalDependencies": {},
   "engines": { "node": ">=0.8" }
 }

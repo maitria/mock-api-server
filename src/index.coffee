@@ -1,6 +1,6 @@
 child_process = require 'child_process'
 Dsl = require './dsl'
-httpSync = require 'http-sync'
+httpSync = require 'http-sync-4'
 
 class MockApi
   constructor: (@options) ->
