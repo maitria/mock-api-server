@@ -1,6 +1,8 @@
+'use strict'
+
 child_process = require 'child_process'
 Dsl = require './dsl'
-httpSync = require 'http-sync'
+httpSync = require 'http-sync-4'
 
 class MockApi
   constructor: (@options) ->
@@ -14,7 +16,7 @@ class MockApi
 
     child_process.spawn "#{__dirname}/../bin/mock-api-server", args
     setTimeout done, 500
- 
+
   stop: ->
     @_sendCommand 'stop'
 

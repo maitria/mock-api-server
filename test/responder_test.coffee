@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 {Responder, ResponseSpecification} = require '../src/responder'
 Dsl = require '../src/dsl'

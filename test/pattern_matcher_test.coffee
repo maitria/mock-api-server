@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 patternMatcher = require '../src/pattern_matcher'
 

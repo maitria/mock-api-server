@@ -1,3 +1,5 @@
+'use strict'
+
 express = require 'express'
 loadFiles = require './load_files'
 parseJsonFiles = require './parse_json_files'
@@ -7,7 +9,7 @@ mockApiServer = require './index'
 {Responder, ResponseSpecification} = require './responder'
 
 HELP_MESSAGE = \
-"mock-api-server: A stand-in for a real API server
+'mock-api-server: A stand-in for a real API server
 Usage:
 
   mock-api-server --port PORT
@@ -15,7 +17,7 @@ Usage:
 Options:
 
   --port PORT           The port to listen on (required).
-"
+'
 
 class Server
   constructor: (@argv) ->
@@ -46,7 +48,7 @@ class Server
       process.exit 0
 
     if !@options.port
-      console.log "mock-api-server: No PORT supplied (see --help)."
+      console.log 'mock-api-server: No PORT supplied (see --help).'
       process.exit 1
 
     @start (err, server) ->
@@ -83,7 +85,7 @@ class Server
     @responder = @responder.withResponseSpecification spec
     res.send 'OK'
 
-  _initLogger: () ->
+  _initLogger: ->
     transports = []
     transports.push new lumber.transports.Console if @options.logToConsole
 
@@ -93,7 +95,7 @@ class Server
         level: 'info'
 
     new lumber.Logger(transports: transports)
- 
+
   _cannedResponses: (req, res, next) =>
     request = pick req, 'method', 'path', 'query'
     @logger.info '[MOCK-REQUEST]', request
@@ -103,5 +105,5 @@ class Server
     res.header 'Content-Type', 'application/json'
     res.status response.statusCode
     res.send JSON.stringify response.body
- 
+
 module.exports = Server

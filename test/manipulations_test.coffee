@@ -1,3 +1,5 @@
+'use strict'
+
 assert = require 'assert'
 {keyReplacer} = require '../src/manipulations'
 

@@ -1,0 +1,3 @@
+--check-leaks
+--compilers coffee:coffee-script/register
+--recursive
