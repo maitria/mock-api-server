@@ -20,8 +20,10 @@ class MockApi
     child_process.spawn "#{__dirname}/../bin/mock-api-server", args
     setTimeout done, 500
 
-  stop: ->
+  stop: (done) ->
     @_sendCommand 'stop'
+    if done
+    	setTimeout done, 500
 
   reset: ->
     @_sendCommand 'reset'
