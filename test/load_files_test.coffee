@@ -14,7 +14,7 @@ describe 'loading json files', ->
       done()
 
   it 'has entries for the files we know about', ->
-    assert.equal result['/GET/v2/hello.json'].toString('utf-8'), '200 OK\n\n{"answer": "Hello, World!"}\n'
+    assert.equal result['/GET/v2/hello.json'].toString('utf-8'), '{"answer": "Hello, World!"}\n'
     assert.equal result['/POST/v2/hello.json'].toString('utf-8'), '200 OK\n\n{"answer": "Goodbye Cruel World"}\n'
 
   context 'when we have .DS_Store files', ->

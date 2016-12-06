@@ -17,6 +17,7 @@ Usage:
 Options:
 
   --port PORT           The port to listen on (required).
+  --test-path PATH      Path to the static test resources.
 '
 
 class Server
@@ -24,6 +25,9 @@ class Server
 
   run: ->
     help = false
+    @options =
+      logToConsole: true
+      testPath: 'test/mock-api'
     @options = logToConsole: true
 
     while @argv.length > 0
@@ -33,6 +37,9 @@ class Server
       else if '--port' == @argv[0]
         @argv.shift()
         @options.port = @argv.shift() | 0
+      else if '--test-path' == @argv[0]
+        @argv.shift()
+        @options.testPath = @argv.shift() | 'test/mock-api'
       else if '--no-log-to-console' == @argv[0]
         @argv.shift()
         @options.logToConsole = false
@@ -64,7 +71,7 @@ class Server
     @app.get '/mock-api/reset', @_reset
     @app.post '/mock-api/add-response', @_addResponse
 
-    loadFiles 'test/mock-api', (err, fileHash) =>
+    loadFiles @options.testPath, (err, fileHash) =>
       @originalResponder = @responder = new Responder parseJsonFiles fileHash
       @server = @app.listen @options.port, done
 
