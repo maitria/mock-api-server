@@ -110,6 +110,7 @@ class Server
     return next() if response == undefined
     @logger.info '[MOCK-RESPONSE]', response.body
     res.header 'Content-Type', 'application/json'
+    res.header 'Access-Control-Allow-Origin', '*'
     res.status response.statusCode
     res.send JSON.stringify response.body
 
