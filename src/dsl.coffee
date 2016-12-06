@@ -4,8 +4,15 @@
 {ResponseSpecification} = require './responder'
 
 class Dsl
-  constructor: (@_addResponseSpecification, [@_path]) ->
+  constructor: (@_addResponseSpecification, [requestInfo]) ->
     @_withMode = 'replaceContent'
+
+    if isObject requestInfo
+      @_path = requestInfo.path
+      @_query = requestInfo.query
+    else
+      @_path = requestInfo
+      @_query = {}
 
   byReplacing: (key) ->
     @_withMode = 'replaceKey'
@@ -26,13 +33,13 @@ class Dsl
       when 'replaceContent'
         path: @_path
         method: method
-        query: {}
+        query: @_query
         body: body
         statusCode: statusCode
       when 'replaceKey'
         path: @_path
         method: method
-        query: {}
+        query: @_query
         replaceKey: @_key
         replaceValue: what
     @_addResponseSpecification spec
