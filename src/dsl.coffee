@@ -14,21 +14,24 @@ class Dsl
 
   with: (what) ->
     if isObject what
-      {body, statusCode} = what
+      body = what.body
+      statusCode = what.statusCode || 200
+      method = what.method || 'GET'
     else
       body = what
       statusCode = 200
+      method = 'GET'
 
     spec = switch @_withMode
       when 'replaceContent'
         path: @_path
-        method: 'GET'
+        method: method
         query: {}
         body: body
         statusCode: statusCode
       when 'replaceKey'
         path: @_path
-        method: 'GET'
+        method: method
         query: {}
         replaceKey: @_key
         replaceValue: what
