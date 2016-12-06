@@ -20,10 +20,6 @@ module.exports = (fileHash) ->
     else
       statusCode = 200
 
-    firstLine = lines.shift()
-    secondLine = lines.shift()
-
-    statusCode = parseStatusCode(firstLine)
     body = JSON.parse lines.join('\n')
 
     responseHash[path] = { statusCode, body }

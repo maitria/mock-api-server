@@ -23,7 +23,7 @@ class MockApi
   stop: (done) ->
     @_sendCommand 'stop'
     if done
-    	setTimeout done, 500
+      setTimeout done, 500
 
   reset: ->
     @_sendCommand 'reset'
