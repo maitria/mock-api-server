@@ -2,10 +2,12 @@
 
 child_process = require 'child_process'
 Dsl = require './dsl'
-httpSync = require 'http-sync-4'
+request = require 'sync-request'
 
 class MockApi
   constructor: (@options) ->
+    @privateSettings =
+      host: '127.0.0.1'
 
   start: (done) ->
     args = ['--port', @options.port]
@@ -27,20 +29,11 @@ class MockApi
     new Dsl @_addResponseSpecification, args
 
   _addResponseSpecification: (spec) =>
-    request = httpSync.request
-      method: 'POST'
-      headers:
-        'Content-Type': 'application/json'
-      port: @options.port
-      body: JSON.stringify(spec)
-      path: '/mock-api/add-response'
-    request.end()
+    request('POST', "http://#{@privateSettings.host}:#{@options.port}/mock-api/add-response", {
+      json: spec
+    })
 
   _sendCommand: (name) ->
-    request = httpSync.request
-      method: 'GET'
-      port: @options.port
-      path: "/mock-api/#{name}"
-    request.end()
+    request('GET', "http://#{@privateSettings.host}:#{@options.port}/mock-api/#{name}")
 
 module.exports = MockApi
