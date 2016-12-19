@@ -32,6 +32,6 @@ class MockApi
     })
 
   _sendCommand: (name) ->
-    request('POST', "http://127.0.0.1:#{@options.port}/mock-api/#{name}")
+    request('GET', "http://127.0.0.1:#{@options.port}/mock-api/#{name}")
 
 module.exports = MockApi
