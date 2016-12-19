@@ -6,6 +6,8 @@ request = require 'sync-request'
 
 class MockApi
   constructor: (@options) ->
+    @privateSettings =
+      host: '127.0.0.1'
 
   start: (done) ->
     args = ['--port', @options.port]
@@ -27,11 +29,11 @@ class MockApi
     new Dsl @_addResponseSpecification, args
 
   _addResponseSpecification: (spec) =>
-    request('POST', "http://127.0.0.1:#{@options.port}/mock-api/add-response", {
+    request('POST', "http://#{@privateSettings.host}:#{@options.port}/mock-api/add-response", {
       json: spec
     })
 
   _sendCommand: (name) ->
-    request('GET', "http://127.0.0.1:#{@options.port}/mock-api/#{name}")
+    request('GET', "http://#{@privateSettings.host}:#{@options.port}/mock-api/#{name}")
 
 module.exports = MockApi
