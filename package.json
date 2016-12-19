@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "async": "~0.2.9",
+    "clumber": "~0.3.0",
     "http-sync-4": "^1.0.0",
     "express": "3.4.2",
     "underscore": "~1.4.4",
-    "clumber": "~0.3.0"
+    "sync-request": "^3.0.1",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {
     "coffee-script": "^1.9.0",
