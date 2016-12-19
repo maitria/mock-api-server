@@ -12,6 +12,9 @@ class MockApi
   start: (done) ->
     args = ['--port', @options.port]
     args.push '--no-log-to-console' unless @options.logToConsole
+    if @options.testPath
+      args.push '--test-path'
+      args.push @options.testPath
     if @options.logToFile
       args.push '--log-to-file'
       args.push @options.logToFile
@@ -19,8 +22,10 @@ class MockApi
     child_process.spawn "#{__dirname}/../bin/mock-api-server", args
     setTimeout done, 500
 
-  stop: ->
+  stop: (done) ->
     @_sendCommand 'stop'
+    if done
+      setTimeout done, 500
 
   reset: ->
     @_sendCommand 'reset'

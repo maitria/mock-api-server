@@ -7,7 +7,7 @@ MockApi = require '../lib/index.js'
 {extend, findWhere, identity, map, pick} = require 'underscore'
 
 doRequest = (options, configureServer, testFn) ->
-  apiServerOptions = pick options, 'port', 'logToFile'
+  apiServerOptions = pick options, 'port', 'logToFile', 'testPath'
 
   server = new MockApi apiServerOptions
   server.start (err) ->
@@ -104,3 +104,11 @@ describe 'a mock API server', ->
       assert.equal JSON.parse(body).answer, 'Not Found'
       assert.equal 404, statusCode
       done()
+
+  it 'supports configurable test-path', ->
+    options =
+      testPath: 'test/mock-api-custom-path'
+      path: '/hello-custom'
+
+    doRequest options, identity, ({body, statusCode}) ->
+      assert.equal JSON.parse(body).answer, 'Hello, Custom!'

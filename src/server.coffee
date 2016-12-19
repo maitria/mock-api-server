@@ -9,22 +9,25 @@ mockApiServer = require './index'
 {Responder, ResponseSpecification} = require './responder'
 
 HELP_MESSAGE = \
-'mock-api-server: A stand-in for a real API server
-Usage:
+  'mock-api-server: A stand-in for a real API server
+  Usage:
 
-  mock-api-server --port PORT
+    mock-api-server --port PORT
 
-Options:
+  Options:
 
-  --port PORT           The port to listen on (required).
-'
+    --port PORT           The port to listen on (required).
+    --test-path PATH      Path to the static test resources.
+  '
 
 class Server
   constructor: (@argv) ->
 
   run: ->
     help = false
-    @options = logToConsole: true
+    @options =
+      logToConsole: true
+      testPath: 'test/mock-api'
 
     while @argv.length > 0
       if '--help' == @argv[0]
@@ -33,6 +36,9 @@ class Server
       else if '--port' == @argv[0]
         @argv.shift()
         @options.port = @argv.shift() | 0
+      else if '--test-path' == @argv[0]
+        @argv.shift()
+        @options.testPath = @argv.shift()
       else if '--no-log-to-console' == @argv[0]
         @argv.shift()
         @options.logToConsole = false
@@ -64,7 +70,7 @@ class Server
     @app.get '/mock-api/reset', @_reset
     @app.post '/mock-api/add-response', @_addResponse
 
-    loadFiles 'test/mock-api', (err, fileHash) =>
+    loadFiles @options.testPath, (err, fileHash) =>
       @originalResponder = @responder = new Responder parseJsonFiles fileHash
       @server = @app.listen @options.port, done
 
@@ -103,6 +109,7 @@ class Server
     return next() if response == undefined
     @logger.info '[MOCK-RESPONSE]', response.body
     res.header 'Content-Type', 'application/json'
+    res.header 'Access-Control-Allow-Origin', '*'
     res.status response.statusCode
     res.send JSON.stringify response.body
 

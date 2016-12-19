@@ -91,6 +91,7 @@ describe 'Responder', ->
     it 'allows adding a response at run-time', ->
       respondTo('/v2/foo/slime.json').with
         statusCode: 200
+        method: 'GET'
         body: 'stuffed-in-response'
 
       {body, statusCode} = get '/v2/foo/slime.json'
