@@ -34,6 +34,12 @@ describe 'Responder', ->
           { x: 69 },
           { y: { z: 96 } }
         ]
+    '/GET/v2/foo/foo':
+      statudCode: 200
+      body: 'answer7'
+      headers:
+        'Content-Type': 'application/javascript'
+        'Access-Control-Request-Method': 'GET'
 
   responder = undefined
   beforeEach ->
@@ -81,6 +87,11 @@ describe 'Responder', ->
   it 'handles wildcards in the query value', ->
     assert.equal 'answer4', get('/v2/foo/baz', x: 'hello, world!!').body
     assert.equal 'answer2', get('/v2/foo/baz', x: 'helloorld').body
+
+  it 'handles configurables headers', ->
+    {headers} = get '/v2/foo/foo'
+    assert.equal headers['Content-Type'], 'application/javascript'
+    assert.equal headers['Access-Control-Request-Method'], 'GET'
 
   it 'handles other methods', ->
     {body, statusCode} = put '/v2/foo/bar'

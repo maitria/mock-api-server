@@ -108,8 +108,7 @@ class Server
     response = @responder.respondTo request
     return next() if response == undefined
     @logger.info '[MOCK-RESPONSE]', response.body
-    res.header 'Content-Type', 'application/json'
-    res.header 'Access-Control-Allow-Origin', '*'
+    res.set(response.headers)
     res.status response.statusCode
     res.send JSON.stringify response.body
 

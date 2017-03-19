@@ -24,10 +24,18 @@ class Dsl
       body = what.body
       statusCode = what.statusCode || 200
       method = what.method || 'GET'
+      headers = what.headers || {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
     else
       body = what
       statusCode = 200
       method = 'GET'
+      headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
 
     spec = switch @_withMode
       when 'replaceContent'
@@ -36,6 +44,7 @@ class Dsl
         query: @_query
         body: body
         statusCode: statusCode
+        headers: headers
       when 'replaceKey'
         path: @_path
         method: method
