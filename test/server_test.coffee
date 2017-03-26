@@ -25,7 +25,7 @@ doRequest = (options, configureServer, testFn) ->
         pageContents += chunk
       res.on 'end', ->
         server.stop()
-        testFn {statusCode: res.statusCode, body: pageContents}
+        testFn {statusCode: res.statusCode, body: pageContents, headers: res.headers}
     request.end()
 
 describe 'a mock API server', ->
@@ -103,6 +103,40 @@ describe 'a mock API server', ->
     doRequest options, configureServer, ({body, statusCode}) ->
       assert.equal JSON.parse(body).answer, 'Not Found'
       assert.equal 404, statusCode
+      done()
+
+  it 'pass default headers', (done) ->
+    options =
+      port: 7006
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with
+        statusCode: 200
+        body:
+          answer: 'Hello, World!'
+
+
+    doRequest options, configureServer, ({headers}) ->
+      assert.equal headers['access-control-allow-origin'], '*'
+      assert.equal headers['content-type'], 'application/json'
+      done()
+
+  it 'allow user to set headers', (done) ->
+    options =
+      port: 7007
+
+    configureServer = (server) ->
+      server.respondTo('/v2/hello').with
+        statusCode: 200,
+        body: '<response>OK</response>'
+        headers:
+          'Content-Type': 'application/xml'
+          'Access-Control-Request-Method': 'GET'
+
+    doRequest options, configureServer, ({headers}) ->
+      assert.equal headers['content-type'], 'application/xml'
+      assert.equal headers['access-control-request-method'], 'GET'
+      assert.equal headers['access-control-allow-origin'], undefined
       done()
 
   it 'supports configurable test-path', ->

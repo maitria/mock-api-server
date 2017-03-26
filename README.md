@@ -103,7 +103,7 @@ files, you will have to backslash them.  For example:
 You can tell the API server to respond to a particular request like so:
 
 ```javascript
-api.respondTo('/foo/bar').with({status: 'OK'});
+api.respondTo('/foo/bar').with({status: 'OK', headers: {'access-control-allow-origin': '*'}});
 ```
 
 This will be active until the next time `api.reset()` is called.
